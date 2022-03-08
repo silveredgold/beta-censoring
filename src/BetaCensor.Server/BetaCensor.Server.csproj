@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.13" />
-    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.13" />
+    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.15" />
+    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.15" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />

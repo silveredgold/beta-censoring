@@ -147,7 +147,7 @@ Task("Publish-Runtime")
 		DotNetPublish(projPath, settings);
 		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb") || fsi.Path.FullPath.EndsWith("onnxruntime.lib"));
 		CreateDirectory($"{artifacts}archive");
-		Zip(runtimeDir, $"{artifacts}archive/censorcore-server-{runtime}.zip");
+		Zip(runtimeDir, $"{artifacts}archive/betacensor-server-{runtime}.zip");
 	}
 });
 
