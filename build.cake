@@ -103,7 +103,7 @@ Task("NuGet")
 
 Task("Publish-NuGet-Package")
 .IsDependentOn("NuGet")
-.WithCriteria(() => HasEnvironmentVariable("NUGET_TOKEN"))
+.WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("NUGET_TOKEN")))
 .WithCriteria(() => HasEnvironmentVariable("GITHUB_REF"))
 .WithCriteria(() => EnvironmentVariable("GITHUB_REF").StartsWith("refs/tags/v") || EnvironmentVariable("GITHUB_REF") == "refs/heads/main")
 .Does(() => {
@@ -171,6 +171,7 @@ Task("Build-Docker-Image")
 
 Task("Publish-Docker-Image")
 .IsDependentOn("Build-Docker-Image")
+.WithCriteria(IsRunningOnUnix())
 .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("QUAY_TOKEN")))
 .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("QUAY_USER")))
 .Does(() => {
