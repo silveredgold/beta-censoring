@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://*:2382");
 
 // Add services to the container.
 
