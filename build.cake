@@ -1,3 +1,5 @@
+#addin nuget:?package=Cake.Docker&version=1.1.0
+
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -149,16 +151,48 @@ Task("Publish-Runtime")
 	}
 });
 
+Task("Build-Docker-Image")
+	.WithCriteria(IsRunningOnUnix())
+	.IsDependentOn("Publish-Runtime")
+	.Does(() =>
+{
+    // also shamelessly stolen from GitHub
+    var dockerFileName = "Dockerfile";
+	Information("Building Docker image...");
+	CopyFileToDirectory($"./build/{dockerFileName}", artifacts);
+	var bSettings = new DockerImageBuildSettings {
+        Tag = new[] { $"beta-censoring/server:{packageVersion}", $"quay.io/beta-censoring/server:{packageVersion}"},
+        File = artifacts + dockerFileName,
+        BuildArg = new[] {$"package_version={packageVersion}"}
+    };
+	DockerBuild(bSettings, artifacts);
+	DeleteFile(artifacts + dockerFileName);
+});
+
+Task("Publish-Docker-Image")
+.IsDependentOn("Build-Docker-Image")
+.WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("QUAY_TOKEN")))
+.WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("QUAY_USER")))
+.Does(() => {
+    DockerLogin(new DockerRegistryLoginSettings{
+        Password = EnvironmentVariable("QUAY_TOKEN"),
+        Username = EnvironmentVariable("QUAY_USER")
+    }, "quay.io");
+    DockerPush($"quay.io/beta-censoring/server:{packageVersion}");
+});
+
 Task("Default")
 	.IsDependentOn("Build");
 
 Task("Publish")
 	.IsDependentOn("NuGet")
-	.IsDependentOn("Publish-Runtime");
+	.IsDependentOn("Publish-Runtime")
+    .IsDependentOn("Build-Docker-Image");
 
 Task("Release")
 	.IsDependentOn("Publish")
-	.IsDependentOn("Publish-NuGet-Package");
+	.IsDependentOn("Publish-NuGet-Package")
+    .IsDependentOn("Publish-Docker-Image");
 
 RunTarget(target);
 
