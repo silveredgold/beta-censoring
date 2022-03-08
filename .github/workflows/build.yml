@@ -1,0 +1,44 @@
+name: BetaCensor CI Build
+
+# This is lightly adapted from a friends build def so I really hope he knows what he's doing.
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+    - name: Restore Tools
+      shell: bash
+      run: |
+        dotnet tool restore
+    - name: Run the Cake script
+      uses: cake-build/cake-action@v1
+      with:
+        target: Release
+        cake-version: tool-manifest
+      env:
+          NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+    - uses: actions/upload-artifact@v3
+      name: Upload Artifacts
+      with:
+        name: beta-censor-server
+        path: dist/archive/*.zip

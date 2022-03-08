@@ -1,0 +1,16 @@
+<Project>
+    <PropertyGroup>
+        <DebugType>Embedded</DebugType>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Authors>silveredgold</Authors>
+        <Copyright>© silveredgold 2022</Copyright>
+        <RepositoryUrl>https://github.com/silveredgold/beta-censor</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/silveredgold/beta-censor</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageTags>nudenet;censoring;image detection;</PackageTags>
+    </PropertyGroup>
+</Project>
