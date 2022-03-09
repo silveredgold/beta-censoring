@@ -1,0 +1,9 @@
+[Unit]
+Description=Beta Censoring Server
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/censor-core-server/BetaCensor.Server
+
+[Install]
+WantedBy=multi-user.target

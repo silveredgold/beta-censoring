@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Http.Json;
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://*:2382");
 
+builder.Host.UseSystemd();
+builder.Host.UseWindowsService();
+
 // Add services to the container.
 
 var loader = new ModelLoaderBuilder()
