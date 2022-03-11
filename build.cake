@@ -146,6 +146,9 @@ Task("Publish-Runtime")
 			ArgumentCustomization = args => args.Append($"/p:Version={packageVersion}").Append("/p:AssemblyVersion=1.0.0.0")
 		};
 		DotNetPublish(projPath, settings);
+        if (singleFile) {
+            CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.lib") || fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.pdb") || fsi.Path.FullPath.EndsWith("web.config"));
+        }
 		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb") || fsi.Path.FullPath.EndsWith("onnxruntime.lib"));
 		CreateDirectory($"{artifacts}archive");
 		Zip(runtimeDir, $"{artifacts}archive/betacensor-server-{runtime}.zip");
