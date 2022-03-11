@@ -7,6 +7,7 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var runtimeSpec = Argument<string>("publish-runtimes", "win-x64;osx-x64;linux-x64");
+var singleFile = Argument<bool>("single-file", true);
 
 ///////////////////////////////////////////////////////////////////////////////
 // VERSIONING
@@ -139,12 +140,15 @@ Task("Publish-Runtime")
 			SelfContained = true,
 			Configuration = configuration,
 			OutputDirectory = runtimeDir,
-			// PublishSingleFile = true,
+			PublishSingleFile = singleFile,
 			PublishTrimmed = true,
-			// IncludeNativeLibrariesForSelfExtract = true,
+			IncludeNativeLibrariesForSelfExtract = singleFile,
 			ArgumentCustomization = args => args.Append($"/p:Version={packageVersion}").Append("/p:AssemblyVersion=1.0.0.0")
 		};
 		DotNetPublish(projPath, settings);
+        if (singleFile) {
+            CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.lib") || fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.pdb") || fsi.Path.FullPath.EndsWith("web.config"));
+        }
 		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb") || fsi.Path.FullPath.EndsWith("onnxruntime.lib"));
 		CreateDirectory($"{artifacts}archive");
 		Zip(runtimeDir, $"{artifacts}archive/betacensor-server-{runtime}.zip");
