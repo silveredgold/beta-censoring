@@ -26,6 +26,7 @@ namespace BetaCensor.Workers
         {
             var value = section.GetSection(key).Get<int>();
             if (value == default(int)) value = 2;
+            Console.WriteLine($"Registering {value} '{typeof(TWorker).Name}' workers");
             return services.AddWorkers<TWorker>(value);
         }
 

@@ -7,6 +7,7 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var runtimeSpec = Argument<string>("publish-runtimes", "win-x64;osx-x64;linux-x64");
+var singleFile = Argument<bool>("single-file", true);
 
 ///////////////////////////////////////////////////////////////////////////////
 // VERSIONING
@@ -139,9 +140,9 @@ Task("Publish-Runtime")
 			SelfContained = true,
 			Configuration = configuration,
 			OutputDirectory = runtimeDir,
-			// PublishSingleFile = true,
+			PublishSingleFile = singleFile,
 			PublishTrimmed = true,
-			// IncludeNativeLibrariesForSelfExtract = true,
+			IncludeNativeLibrariesForSelfExtract = singleFile,
 			ArgumentCustomization = args => args.Append($"/p:Version={packageVersion}").Append("/p:AssemblyVersion=1.0.0.0")
 		};
 		DotNetPublish(projPath, settings);
