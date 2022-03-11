@@ -5,8 +5,8 @@ export default defineUserConfig<DefaultThemeOptions>({
   // site config
   lang: 'en-US',
   title: 'Beta Censoring',
-  description: 'Just playing around',
-
+  description: 'On-demand censoring of NSFW images just for betas',
+  base: '/beta-censoring/',
   // theme and its config
   theme: '@vuepress/theme-default',
   themeConfig: {
