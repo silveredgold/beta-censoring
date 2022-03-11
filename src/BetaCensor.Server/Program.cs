@@ -53,6 +53,7 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 
 builder.Services.AddQueues<CensorImageRequest, CensorImageResponse>();
+builder.Services.AddSingleton<QueueValidator<CensorImageRequest>>(p => new QueueValidator<CensorImageRequest>(req => req.RequestId, p.GetRequiredService<ILogger<QueueValidator<CensorImageRequest>>>()));
 builder.Services.AddHostedService<NotificationWorkerService>();
 builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImageResponse>>(builder.Configuration.GetSection("Server"));
 

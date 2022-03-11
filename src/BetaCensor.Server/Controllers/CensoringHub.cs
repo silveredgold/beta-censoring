@@ -1,6 +1,7 @@
 using BetaCensor.Core.Messaging;
 using BetaCensor.Workers;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BetaCensor.Server.Controllers;
@@ -9,15 +10,13 @@ public class CensoringHub : Hub<ICensorServiceClient> {
     private readonly ILogger<CensoringHub> _logger;
     private readonly IMediator _mediator;
     private readonly IAsyncBackgroundQueue<CensorImageRequest> _queue;
-    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly QueueValidator<CensorImageRequest>? _validator;
 
-    // private readonly IBus _bus;
-
-    public CensoringHub(IMediator mediator, ILogger<CensoringHub> logger, IAsyncBackgroundQueue<CensorImageRequest> requestQueue, IServiceScopeFactory scopeFactory) {
+    public CensoringHub(IMediator mediator, ILogger<CensoringHub> logger, IAsyncBackgroundQueue<CensorImageRequest> requestQueue, QueueValidator<CensorImageRequest>? validator = null) {
         _logger = logger;
         _mediator = mediator;
         _queue = requestQueue;
-        _scopeFactory = scopeFactory;
+        _validator = validator;
     }
 
     public async Task<bool> CensorImage(CensorImageRequest request) {
@@ -45,6 +44,20 @@ public class CensoringHub : Hub<ICensorServiceClient> {
         await Groups.AddToGroupAsync(Context.ConnectionId, request.RequestId);
         var result = await _mediator.Send(request);
         return result;
+    }
+
+    public Task CancelRequests(CancelRequest request) {
+        try {
+            var requestIds = request.Requests ?? new List<string>();
+            _logger.LogInformation("Cancelling requests: " + string.Join(',', requestIds));
+            if (_validator != null) {
+                _validator.CancelRequests(requestIds);
+            }
+        } catch (Exception e) {
+            _logger.LogWarning(e, "Error processing cancel request!");
+            //ignored
+        }
+        return Task.CompletedTask;
     }
 
     // public async Task<bool> OpenCensoringSession([FromServices]ModelLoader loader, string sessionId, IEnumerable<CensorImageRequest> requests) {
