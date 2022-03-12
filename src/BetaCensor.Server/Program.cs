@@ -1,5 +1,6 @@
 using BetaCensor.Core.Messaging;
 using BetaCensor.Server;
+using BetaCensor.Server.Discovery;
 using BetaCensor.Server.Messaging;
 using BetaCensor.Workers;
 using CensorCore;
@@ -11,6 +12,7 @@ using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://*:2382");
+// builder.WebHost.AdvertiseServer();
 
 builder.Configuration.AddConfigFile("config");
 
@@ -81,6 +83,8 @@ builder.Services.AddSingleton<QueueValidator<CensorImageRequest>>(p => new Queue
 builder.Services.AddHostedService<NotificationWorkerService>();
 builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImageResponse>>(builder.Configuration.GetSection("Server"));
 
+builder.Services.AddHostedService<DiscoveryService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -100,5 +104,4 @@ app.UseEndpoints(e =>
 
 app.MapControllers();
 app.UseWebSockets();
-
 app.Run();

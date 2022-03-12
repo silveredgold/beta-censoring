@@ -49,7 +49,9 @@ public class CensoringHub : Hub<ICensorServiceClient> {
     public Task CancelRequests(CancelRequest request) {
         try {
             var requestIds = request.Requests ?? new List<string>();
-            _logger.LogInformation("Cancelling requests: " + string.Join(',', requestIds));
+            if (requestIds.Any()) {
+                _logger.LogTrace("Cancelling requests: " + string.Join(',', requestIds));
+            }
             if (_validator != null) {
                 _validator.CancelRequests(requestIds);
             }

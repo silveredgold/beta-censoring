@@ -10,6 +10,7 @@
     <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.15" />
     <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.15" />
     <PackageReference Include="ConfigurEngine" Version="0.2.0" />
+    <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
