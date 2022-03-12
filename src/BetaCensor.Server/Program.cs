@@ -2,6 +2,7 @@ using BetaCensor.Core.Messaging;
 using BetaCensor.Server;
 using BetaCensor.Server.Discovery;
 using BetaCensor.Server.Messaging;
+using BetaCensor.Web;
 using BetaCensor.Workers;
 using CensorCore;
 using CensorCore.ModelLoader;
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://*:2382");
 // builder.WebHost.AdvertiseServer();
 
-builder.Configuration.AddConfigFile("config");
+builder.Configuration.AddConfigFile("config").AddConfigFile("stickers");
 
 builder.Host.UseSystemd();
 builder.Host.UseWindowsService();
@@ -84,6 +85,9 @@ builder.Services.AddHostedService<NotificationWorkerService>();
 builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImageResponse>>(builder.Configuration.GetSection("Server"));
 
 builder.Services.AddHostedService<DiscoveryService>();
+
+var stickerOpts = builder.Configuration.GetSection("Stickers");
+builder.Services.AddStickerService(stickerOpts);
 
 var app = builder.Build();
 

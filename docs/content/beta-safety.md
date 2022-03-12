@@ -40,4 +40,4 @@ This is one area where (at the time of writing) Beta Safety absolutely wins. The
 
   - Hardware acceleration with GPUs
   - Censoring for the eyes
-  - Sticker censoring (technically supported but needlessly difficult to configure)
+  - Sticker censoring (supported but a bit difficult to set up)
