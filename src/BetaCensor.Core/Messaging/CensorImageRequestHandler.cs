@@ -1,6 +1,7 @@
 using CensorCore;
 using CensorCore.Censoring;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BetaCensor.Core.Messaging;
@@ -9,16 +10,13 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
 {
     private readonly AIService _ai;
     private readonly ICensoringProvider _censor;
+    // private readonly MatchOptions? _matchOptions;
     private readonly ILogger<CensorImageRequestHandler> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public CensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CensorImageRequestHandler> logger)
-    {
-        _logger = logger;
-        // _logger.LogInformation($".ctor: {DateTime.UtcNow.ToString("o")}");
-        this._ai = aiService;
-        this._censor = censoringProvider;
+    public CensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CensorImageRequestHandler> logger, IServiceScopeFactory scopeFactory, MatchOptions? matchOptions = null)
+    => (_logger, _ai, _censor, _scopeFactory) = (logger, aiService, censoringProvider, scopeFactory);
 
-    }
     public async Task<CensorImageResponse> Handle(CensorImageRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Processing censoring request: {request.RequestId}");
@@ -26,7 +24,9 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
         if (!string.IsNullOrWhiteSpace(imageUrl)) {
             var timer = new System.Diagnostics.Stopwatch();
             try {
-                var result = await this._ai.RunModel(imageUrl);
+                using var scope = _scopeFactory.CreateScope();
+                var matchOptions = scope.ServiceProvider.GetService<MatchOptions>();
+                var result = await this._ai.RunModel(imageUrl, matchOptions);
                 if (result != null) {
                     timer.Start();
                     IResultParser? parser = null;

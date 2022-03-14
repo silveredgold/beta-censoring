@@ -66,7 +66,9 @@ namespace BetaCensor.Workers
         var imageUrl = request.ImageDataUrl ?? request.ImageUrl;
         if (!string.IsNullOrWhiteSpace(imageUrl)) {
             var timer = new System.Diagnostics.Stopwatch();
-            var result = await this._ai.RunModel(imageUrl);
+            using var scope = _scopeFactory.CreateScope();
+            var options = scope.ServiceProvider.GetService<MatchOptions>();
+            var result = await this._ai.RunModel(imageUrl, options);
             if (result != null) {
                 timer.Start();
                 IResultParser? parser = null;

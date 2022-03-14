@@ -9,13 +9,17 @@ using CensorCore.ModelLoader;
 using ConfigurEngine;
 using MediatR;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.FileProviders;
 using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://*:2382");
 // builder.WebHost.AdvertiseServer();
 
-builder.Configuration.AddConfigFile("config").AddConfigFile("stickers");
+builder.Configuration
+    .AddConfigFile("config")
+    .AddConfigFile("stickers")
+    .AddConfigFile("beta-config");
 
 builder.Host.UseSystemd();
 builder.Host.UseWindowsService();
@@ -34,6 +38,7 @@ builder.Services.AddCensoring(model);
 var serverOpts = builder.Configuration.GetSection("Server").Get<ServerOptions>();
 serverOpts ??= new ServerOptions();
 
+// builder.Services.AddSpaStaticFiles(options => {options.RootPath = "wwwroot";});
 var mvc = builder.Services.AddControllers();
 if (serverOpts.EnableRest) {
     Console.WriteLine("Enabling REST interface!");
@@ -43,6 +48,14 @@ if (serverOpts.EnableRest) {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRazorPages();
+
+var physicalProvider = builder.Environment.ContentRootFileProvider;
+var manifestEmbeddedProvider =
+    new ManifestEmbeddedFileProvider(typeof(Program).Assembly, "wwwroot");
+var compositeProvider =
+    new CompositeFileProvider(physicalProvider, manifestEmbeddedProvider);
+builder.Services.AddSingleton<IFileProvider>(compositeProvider);
 
 builder.Services.AddMediatR(conf =>
 {
@@ -89,6 +102,9 @@ builder.Services.AddHostedService<DiscoveryService>();
 var stickerOpts = builder.Configuration.GetSection("Stickers");
 builder.Services.AddStickerService(stickerOpts);
 
+builder.Services.AddScoped<MatchOptions>(StartupExtensions.BuildMatchOptions);
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -108,4 +124,20 @@ app.UseEndpoints(e =>
 
 app.MapControllers();
 app.UseWebSockets();
+if (app.Environment.IsDevelopment()) {
+    app.UseSpa(spa => {
+            spa.Options.SourcePath = "ClientApp";
+            spa.Options.DevServerPort = 3000;
+            spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+    });
+} else {
+
+    
+    app.UseStaticFiles(new StaticFileOptions {
+        FileProvider = compositeProvider
+    });
+    
+    
+}
+app.MapRazorPages();
 app.Run();
