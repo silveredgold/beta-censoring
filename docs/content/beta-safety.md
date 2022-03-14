@@ -22,6 +22,8 @@ Due to completely different stacks and some pretty significant changes in how th
 
 Additionally, since Beta Censoring is configurable, you can customise your own performance. If you're okay with slower censoring times for less performance impact, you can turn down the workers and caching options. Alternatively, if you have a beefy rig and don't mind your PC working a bit harder, add some more workers and caching, and revel in the faster response times.
 
+It's a much more minor point but if it matters to you Beta Censoring is also about a third the size of Beta Safety. That being said, it's kinda academic numbers on either side: ~55MB vs ~160MB.
+
 ## Customisation
 
 This is a big one so hard to explain succinctly, but essentially every part of the Beta Censoring experience is more configurable and adaptable than it's counterpart in Beta Safety. 
@@ -29,6 +31,8 @@ This is a big one so hard to explain succinctly, but essentially every part of t
 #### Server
 
 You can customise more of how the server works than with Beta Safety including enabling/disabling entire integrations (like the WebSockets used by Beta Protection or the REST API), though in its current form this isn't always the easiest since it requires configuration files.
+
+You can also load assets (like stickers) from anywhere on your PC, no copying/moving required. Combine this with a more fine-grained control over censoring and you can tune the server to match how you want it to work.
 
 #### Clients
 

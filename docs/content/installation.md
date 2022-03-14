@@ -14,7 +14,7 @@ Open the folder you extracted the app to, then just double-click the executable 
 
 > That will be `BetaCensor.Server.exe` on Windows, and `BetaCensor.Server` on Linux or macOS
 
-A console window should appear and after a few seconds, you're ready to rock, the server is now running. You can point your clients (like Beta Protection) to `localhost:2382` and get censoring.
+A console window should appear and after a few seconds, you're ready to rock, the server is now running. You can point your clients (like Beta Protection) to `http://localhost:2382` and get censoring.
 
 ## Known Issues
 
