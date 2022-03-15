@@ -108,8 +108,11 @@ Task("Pages-Build")
 {
 	Information("Building Status page site");
 	var siteRootPath = "./src/BetaCensor.Server/ClientApp";
-	// NpmCi(settings => { settings.FromPath(siteRootPath); });
-	NpmInstall(settings => { settings.FromPath(siteRootPath); });
+	// if (!string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_REF"))) {
+	NpmCi(settings => { settings.FromPath(siteRootPath); });
+	// } else {
+	// 	NpmInstall(settings => { settings.FromPath(siteRootPath); });
+	// }
 	NpmRunScript("build", settings => settings.FromPath(siteRootPath));
 });
 

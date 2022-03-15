@@ -3,7 +3,7 @@ using CensorCore;
 using Microsoft.Extensions.FileProviders;
 
 namespace BetaCensor.Web;
-
+#pragma warning disable 1998
 public class StickerProvider : CensorCore.IAssetStore {
     private readonly StickerOptions? _options;
     private readonly List<CategoryProvider> _categoryProviders;
@@ -66,3 +66,4 @@ public class StickerProvider : CensorCore.IAssetStore {
         return providedCats.Concat(availableCats).Distinct();
     }
 }
+#pragma warning restore 1998

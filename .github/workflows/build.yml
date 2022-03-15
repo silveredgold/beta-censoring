@@ -55,6 +55,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with: 
+        prerelease: true
+        generate_release_notes: true
         body: |
           See [the full docs](https://silveredgold.github.io/beta-censoring/#introduction) (including the [the installation guide](https://silveredgold.github.io/beta-censoring/content/installation.html#installation) ) for full instructions on installing, configuring and using Beta Censoring.
 
