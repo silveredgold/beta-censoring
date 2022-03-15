@@ -3,15 +3,16 @@
         <template #header>Loaded Assets</template>
         <n-list-item key="stickers">
             Sticker Categories
-            <n-list bordered>
+            <n-empty description="No stickers available" v-if="!stickers || stickers.length == 0" />
+            <n-list bordered v-if="stickers && stickers.length > 0">
                 <n-list-item v-for="cat in stickers" v-bind:key="cat">
-            {{cat}}
-            <template #suffix>
-                <n-icon-wrapper :size="20" :border-radius="10" style="display: flex;">
-                    <n-icon :size="14" :component="Checkmark" />
-                </n-icon-wrapper>
-            </template>
-        </n-list-item>
+                    {{ cat }}
+                    <template #suffix>
+                        <n-icon-wrapper :size="20" :border-radius="10" style="display: flex;">
+                            <n-icon :size="14" :component="Checkmark" />
+                        </n-icon-wrapper>
+                    </template>
+                </n-list-item>
             </n-list>
         </n-list-item>
         <template #footer>
@@ -20,7 +21,7 @@
     </n-list>
 </template>
 <script setup lang="ts">
-import { NIcon, useNotification, NList, NListItem, NIconWrapper, NStatistic } from "naive-ui";
+import { NIcon, useNotification, NList, NListItem, NIconWrapper, NEmpty } from "naive-ui";
 import { Checkmark, Close } from "@vicons/ionicons5";
 import { ref, onBeforeMount, Ref } from "vue";
 import { useRazorRequest } from "../request-plugin";

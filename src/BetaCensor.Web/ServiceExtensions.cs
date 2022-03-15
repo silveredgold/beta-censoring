@@ -1,14 +1,22 @@
 using BetaCensor.Web;
 using BetaCensor.Web.Providers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 
 namespace Microsoft.Extensions.DependencyInjection {
     public static class ServiceExtensions {
-        public static IServiceCollection AddStickerService(this IServiceCollection services, IConfigurationSection section) {
+        public static IServiceCollection AddStickerService(this IServiceCollection services, IConfigurationSection section, IWebHostEnvironment env) {
             var opts = section.Get<StickerOptions>() ?? new StickerOptions();
             var providers = new List<IFileProvider>();
+            var defaultStorePath = Path.Join(env.ContentRootPath, "stickers");
+            if (Directory.Exists(defaultStorePath)) {
+                var defaultProvider = defaultStorePath.GetProvider(true);
+                if (defaultProvider != null) {
+                    providers.Add(defaultProvider);
+                }
+            }
             if (opts.LocalStores.Any()) {
                 var storeProviders = opts.LocalStores.Select(p => p.GetProvider(true)).Where(p => p is not null);
                 if (storeProviders != null && storeProviders.Any()) {

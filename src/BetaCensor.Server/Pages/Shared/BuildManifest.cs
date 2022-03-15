@@ -9,7 +9,7 @@ public class ManifestFile
     [JsonPropertyName("src")]
     public string SourceFile {get;set;} = string.Empty;
     [JsonPropertyName("isEntry")]
-    public bool IsEntryFile {get;set;} = new();
+    public bool? IsEntryFile {get;set;} = null;
     [JsonPropertyName("imports")]
     public List<string> Imports {get;set;} = new();
     [JsonPropertyName("css")]

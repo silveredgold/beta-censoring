@@ -3,7 +3,7 @@ using Makaretu.Dns;
 
 namespace BetaCensor.Server.Discovery {
     public class LocalServiceProfile : ServiceProfile {
-        public LocalServiceProfile(string instanceName, string serviceName, ushort port, IEnumerable<IPAddress> addresses = null, string hostName = null) : base() {
+        public LocalServiceProfile(string instanceName, string serviceName, ushort port, IEnumerable<IPAddress>? addresses = null, string? hostName = null) : base() {
             InstanceName = instanceName;
             ServiceName = serviceName;
             var fqn = FullyQualifiedName;

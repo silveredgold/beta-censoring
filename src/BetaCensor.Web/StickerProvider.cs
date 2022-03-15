@@ -1,4 +1,5 @@
 using BetaCensor.Web.Providers;
+using CensorCore;
 using Microsoft.Extensions.FileProviders;
 
 namespace BetaCensor.Web;
@@ -19,11 +20,11 @@ public class StickerProvider : CensorCore.IAssetStore {
         return Task.FromResult<string?>(null);
     }
 
-    public Task<byte[]?> GetRandomImage(string imageType, float? ratio, List<string>? category) {
+    public Task<RawImageData?> GetRandomImage(string imageType, float? ratio, List<string>? category) {
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<byte[]>> GetImages(string imageType, List<string>? category) {
+    public async Task<IEnumerable<RawImageData>> GetImages(string imageType, List<string>? category) {
         if (imageType == CensorCore.Censoring.KnownAssetTypes.Stickers && category is not null && category.Any()) {
             var results = new List<IFileInfo?>();
             foreach (var item in category) {
@@ -37,10 +38,10 @@ public class StickerProvider : CensorCore.IAssetStore {
                 results.AddRange(catResults.Where(f => !f.IsDirectory && f.Exists).Concat(nestedFiles));
             }
             var candidates = results.Where(fi => fi is not null && fi.Exists);
-            return candidates.Select(c => ReadFile(c!));
+            return candidates.Select(c =>new RawImageData(ReadFile(c!)));
         }
         else {
-            return Array.Empty<byte[]>();
+            return Array.Empty<RawImageData>();
         }
     }
 

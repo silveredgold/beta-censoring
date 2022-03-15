@@ -80,7 +80,8 @@ if (serverOpts.EnableSignalR) {
 }
 
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(serverOpts.SocketPath)) {
-    builder.WebHost.ConfigureKestrel(k => {
+    builder.WebHost.ConfigureKestrel(k =>
+    {
         k.ListenUnixSocket(serverOpts.SocketPath);
     });
 }
@@ -100,9 +101,9 @@ builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImag
 builder.Services.AddHostedService<DiscoveryService>();
 
 var stickerOpts = builder.Configuration.GetSection("Stickers");
-builder.Services.AddStickerService(stickerOpts);
+builder.Services.AddStickerService(stickerOpts, builder.Environment);
 
-builder.Services.AddScoped<MatchOptions>(StartupExtensions.BuildMatchOptions);
+builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
 
 
 var app = builder.Build();
@@ -125,19 +126,17 @@ app.UseEndpoints(e =>
 app.MapControllers();
 app.UseWebSockets();
 if (app.Environment.IsDevelopment()) {
-    app.UseSpa(spa => {
-            spa.Options.SourcePath = "ClientApp";
-            spa.Options.DevServerPort = 3000;
-            spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+    app.UseSpa(spa =>
+    {
+        spa.Options.SourcePath = "ClientApp";
+        spa.Options.DevServerPort = 3000;
+        spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
     });
-} else {
-
-    
+}
+else {
     app.UseStaticFiles(new StaticFileOptions {
         FileProvider = compositeProvider
     });
-    
-    
 }
 app.MapRazorPages();
 app.Run();

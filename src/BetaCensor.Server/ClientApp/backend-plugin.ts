@@ -17,7 +17,7 @@ export const backendProviderPlugin: Plugin = {
 }
 
 const getRequestClient = async (host?: string): Promise<ICensorBackend> => {
-    const client = new BetaCensorClient(window.location.href.slice(0,-1));
+    const client = new BetaCensorClient(window.location.origin);
     client.ephemeral = true;
     // const client = new BetaSafetyBackendClient(defaultMessageEvents);
     return client;

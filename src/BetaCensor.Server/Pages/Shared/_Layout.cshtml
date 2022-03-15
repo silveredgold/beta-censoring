@@ -9,12 +9,13 @@
     var parsedManifest = (manifest != null && manifest.Exists) 
         ? JsonSerializer.Deserialize<Dictionary<string, ManifestFile>>(manifest.CreateReadStream())
         : null;
+    var entryPoint = ViewData["EntryPoint"]?.ToString() ?? "main";
 }
 <head>
     <title>@ViewData["Title"]</title>
     <environment names="Production">
     @if (parsedManifest != null) {
-        @foreach (var entryfile in parsedManifest.Where(mf => mf.Value.Stylesheets.Any()))
+        @foreach (var entryfile in parsedManifest.Where(mf => mf.Value.IsEntryPoint(entryPoint) && mf.Value.Stylesheets.Any()))
         {
             @foreach (var sheet in entryfile.Value.Stylesheets.Where(s => !string.IsNullOrWhiteSpace(s)))
             {
@@ -35,14 +36,15 @@
     </main>
     <environment names="Development">
         <script type="module" src="~/dist/@@vite/client"></script>
-        <script type="module" src="~/dist/js/main.js"></script>
     </environment>
     @* <environment names="Production">
         <script type="module" asp-src-include="dist/assets/main.*.js"></script>
     </environment> *@
     <environment names="Production">
         @if (parsedManifest != null) {
-            @foreach (var entryFile in parsedManifest.Where(mf => mf.Value.IsEntryFile))
+            var entryPoints = parsedManifest
+                .Where(mf => mf.Value.IsEntryPoint(entryPoint));
+            @foreach (var entryFile in entryPoints)
             {
                 var filePath = "dist/" + entryFile.Value.FilePath;
                 @:<script type="module" src="@filePath"></script>

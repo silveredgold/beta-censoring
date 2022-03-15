@@ -3,7 +3,7 @@ title: 'Configuration'
 ---
 
 > Note that in the preview releases, configuring the server is an advanced process that assumes some familiarity with editing configuration files yourself.
-> This process will improve in future releases so it is only recommended to proceed if you are comfortable with that, and really need to.
+> This process will hopefully improve in future releases so it is only recommended to proceed if you are comfortable with that, and really need to.
 
 ## Configuration Files
 
@@ -33,7 +33,13 @@ C:/path/to/my/sticker/store
     │  ch_sticker3.png
 ```
 
-You could add this store to your configuration like below, and it would make a `Professional` and `Chastity` category available.
+#### Default Store
+
+Beta Censoring looks for a default store at the `stickers/` path from the server folder. That is, if there's a folder called `stickers` in the same place as `BetaCensor.Server.exe`, Beta Censoring will automatically load any subfolders in that folder as categories of stickers.
+
+#### Configuration
+
+You can also add sticker stores to your configuration like below, and it would make a `Professional` and `Chastity` category available.
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>
@@ -62,7 +68,7 @@ Stickers:
 
 ### Sticker Paths
 
-If you just want to add some images with a specific category, you can do that too. The `Paths` configuration lets you add any number of folders, anywhere on your PC, as stickers for any category you like. For example, with the following configuration:
+If you just want to add some images with a specific category without moving/copying them, you can do that too. The `Paths` configuration lets you add any number of folders, anywhere on your PC, as stickers for any category you like. For example, with the following configuration:
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>

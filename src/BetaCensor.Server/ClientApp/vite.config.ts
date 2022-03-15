@@ -7,10 +7,10 @@ export default defineConfig({
     base: '/dist/',
     resolve: {
         alias: {
-          "@": fileURLToPath(new URL("./src", import.meta.url)),
-          "#": "@silveredgold/beta-shared"
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+            "#": "@silveredgold/beta-shared"
         },
-      },
+    },
     build: {
         outDir: '../wwwroot/dist',
         emptyOutDir: true,
@@ -18,6 +18,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: './main.ts',
+                config: './config.ts'
             }
         }
     },

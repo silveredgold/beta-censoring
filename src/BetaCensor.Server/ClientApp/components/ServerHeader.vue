@@ -5,7 +5,7 @@
                 :subtitle="extraText"
                 style="padding-bottom: 2rem;"
             >
-                <template #header>Server Status Panel</template>
+                <template #header>{{title}}</template>
                 <template #title>Beta Censoring</template>
                 <template #avatar>
                     <n-avatar :src="iconSrc" />
@@ -90,9 +90,11 @@ import { useRazorRequest } from "../request-plugin";
 
 const getHost: HostConfigurator = {
     getBackendHost: async (): Promise<string> => {
-        return window.location.href.slice(0, -1);
+        return window.location.origin;
     }
 }
+
+const props = withDefaults(defineProps<{title?: string}>(), {title: "Server Status Panel"});
 
 const notif = useNotification();
 const coreVersion = ref("v0.0.0");
@@ -100,8 +102,7 @@ const serverVersion = ref("v0.0.0");
 const requestCount = ref(0);
 const hostname = ref("");
 
-const backend = inject('backend', undefined);
-console.log('injected', backend);
+const {title} = toRefs(props);
 
 const extraText = computed(() => `Server is now running${hostname.value ? " on " + hostname.value : ""}, and listening for censoring requests.`);
 
