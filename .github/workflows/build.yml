@@ -7,14 +7,11 @@ on:
     branches: [ main ]
     paths-ignore:
       - "docs/**"
+      - "client/**"
       - ".github/workflows/docs.yml"
+      - ".github/workflows/client.yml"
     tags:
       - 'v*.*.*'
-  pull_request:
-    branches: [ main ]
-    paths-ignore:
-      - "docs/**"
-      - ".github/workflows/docs.yml"
 
 jobs:
   build:
@@ -44,3 +41,25 @@ jobs:
       with:
         name: beta-censor-server
         path: dist/archive/*.zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: beta-censor-server
+        path: server
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with: 
+        body: |
+          See [the full docs](https://silveredgold.github.io/beta-censoring/#introduction) (including the [the installation guide](https://silveredgold.github.io/beta-censoring/content/installation.html#installation) ) for full instructions on installing, configuring and using Beta Censoring.
+
+          This is an extremely early preview build, and I cannot guarantee that you won't experience bugs.
+        files: |
+          ./server/*.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
