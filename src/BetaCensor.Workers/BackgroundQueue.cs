@@ -34,7 +34,10 @@ namespace BetaCensor.Workers {
                 var item = await _items.Reader.ReadAsync(cancellationToken);
                 return item;
             }
-            
+        }
+
+        public int? GetItemCount() {
+            return _items.Reader.CanCount ? _items.Reader.Count : null;
         }
     }
 }

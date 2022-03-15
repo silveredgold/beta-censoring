@@ -13,5 +13,9 @@ namespace BetaCensor.Workers
         /// </summary>
         /// <returns>If found, an item, otherwise null.</returns>
         Task<T?> Dequeue(CancellationToken cancellationToken);
+
+        int? GetItemCount() {
+            return null;
+        }
     }
 }

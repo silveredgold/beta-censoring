@@ -1,4 +1,5 @@
 #addin nuget:?package=Cake.Docker&version=1.1.0
+#addin nuget:?package=Cake.Npm&version=2.0.0
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -102,6 +103,16 @@ Task("NuGet")
 	}
 });
 
+Task("Pages-Build")
+	.Does(() =>
+{
+	Information("Building Status page site");
+	var siteRootPath = "./src/BetaCensor.Server/ClientApp";
+	// NpmCi(settings => { settings.FromPath(siteRootPath); });
+	NpmInstall(settings => { settings.FromPath(siteRootPath); });
+	NpmRunScript("build", settings => settings.FromPath(siteRootPath));
+});
+
 Task("Publish-NuGet-Package")
 .IsDependentOn("NuGet")
 .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("NUGET_TOKEN")))
@@ -119,6 +130,7 @@ Task("Publish-NuGet-Package")
 
 Task("Publish-Runtime")
 	.IsDependentOn("Build")
+	.IsDependentOn("Pages-Build")
 	.Does(() =>
 {
 	var projectDir = $"{artifacts}server";

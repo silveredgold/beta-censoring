@@ -3,7 +3,7 @@ title: 'Configuration'
 ---
 
 > Note that in the preview releases, configuring the server is an advanced process that assumes some familiarity with editing configuration files yourself.
-> This process will improve in future releases so it is only recommended to proceed if you are comfortable with that, and really need to.
+> This process will hopefully improve in future releases so it is only recommended to proceed if you are comfortable with that, and really need to.
 
 ## Configuration Files
 
@@ -33,7 +33,13 @@ C:/path/to/my/sticker/store
     │  ch_sticker3.png
 ```
 
-You could add this store to your configuration like below, and it would make a `Professional` and `Chastity` category available.
+#### Default Store
+
+Beta Censoring looks for a default store at the `stickers/` path from the server folder. That is, if there's a folder called `stickers` in the same place as `BetaCensor.Server.exe`, Beta Censoring will automatically load any subfolders in that folder as categories of stickers.
+
+#### Configuration
+
+You can also add sticker stores to your configuration like below, and it would make a `Professional` and `Chastity` category available.
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>
@@ -62,7 +68,7 @@ Stickers:
 
 ### Sticker Paths
 
-If you just want to add some images with a specific category, you can do that too. The `Paths` configuration lets you add any number of folders, anywhere on your PC, as stickers for any category you like. For example, with the following configuration:
+If you just want to add some images with a specific category without moving/copying them, you can do that too. The `Paths` configuration lets you add any number of folders, anywhere on your PC, as stickers for any category you like. For example, with the following configuration:
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>
@@ -95,6 +101,65 @@ Stickers:
 Any images in any of the folders provided for a given category (`Discreet` and `Chastity` in the example above) will be merged together and used any time a client requests sticker censoring with those categories enabled.
 
 You also don't need to worry about images being the exact right dimension! Beta Censoring will check the available images and find one that's aspect ratio is _close enough_ to the censoring it's being used for. While we recommend sticking mostly to square-ish images, you don't need to worry too much about the exact dimensions.
+
+## Censoring Configuration
+
+You can also fine-tune the censoring settings used by all clients using the server configuration file. You can separately adjust the minimum confidence (between 0 and 1) for Beta Censoring to censor a result from the AI, as well as tune the scores required for individual matches ('classes' as the AI calls them). For example, the default scores range from 0.4 to 0.55 (the default) up to 0.6 for some of the trickier covered classes. If you want to make the censoring more trigger-happy overall, you can adjust the `MinimumScore` option, like below:
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+MatchOptions:
+  MinimumScore: 0.4
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "MatchOptions": {
+        "MinimumScore": 0.4
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+or if you just want to make it _much_ more likely to censor specifically breasts (either covered or exposed) you could use the following:
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+MatchOptions:
+  ClassScores:
+    EXPOSED_BREAST_F: 0.35
+    COVERED_BREAST_F: 0.45
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "MatchOptions": {
+        "ClassScores": {
+          "EXPOSED_BREAST_F": 0.35,
+          "COVERED_BREAST_F": 0.45
+        }
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+You can provide class-specific scores for any of the [classes supported by the NudeNet model](https://github.com/notAI-tech/NudeNet#nudenet-neural-nets-for-nudity-classification-detection-and-selective-censoring).
 
 ## Server Configuration
 
@@ -129,6 +194,6 @@ Server:
 
 ### Worker Configuration
 
-It may be tempting to dramatically increase the `WorkerCount` setting to get more workers censoring images at once, but this is probably not a good idea.
+It may be tempting to dramatically increase the `WorkerCount` setting to get more workers censoring images at once, but this is not usually a good idea.
 
-Increasing the worker count will **dramatically** increase the load on your PC while censoring. Additionally, adding more workers actually has the potential to _slow down_ censoring, especially if you add more workers than your PC can reasonably run at once. A reasonable rule of thumb is to use half the number of cores your CPU has. If you're okay with things really slowing down during censoring, you can try going as high as the number of cores, but it's **strongly recommended** to not go above this number.
+Increasing the worker count will **dramatically** increase the load on your PC while censoring. Additionally, adding more workers actually has the potential to _slow down_ censoring, especially if you add more workers than your PC can reasonably run at once. A reasonable rule of thumb is to use half the number of cores your CPU has. If you're okay with things *really* slowing down during censoring, you can try going as high as the number of cores, but it's **strongly recommended** to not go above this number.

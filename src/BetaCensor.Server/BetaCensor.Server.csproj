@@ -4,15 +4,22 @@
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsPublishable>true</IsPublishable>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.15" />
-    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.15" />
+    <EmbeddedResource Include="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.20" />
+    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.20" />
     <PackageReference Include="ConfigurEngine" Version="0.2.0" />
     <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -21,6 +28,12 @@
   <ItemGroup>
     <ProjectReference Include="..\BetaCensor.Web\BetaCensor.Web.csproj" />
     <ProjectReference Include="..\BetaCensor.Workers\BetaCensor.Workers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <None Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <Content Remove="ClientApp\*.json" />
   </ItemGroup>
 
 </Project>
