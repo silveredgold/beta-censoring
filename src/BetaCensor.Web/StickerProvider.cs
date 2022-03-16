@@ -17,7 +17,7 @@ public class StickerProvider : CensorCore.IAssetStore {
         _provider = new CompositeFileProvider(providers);
     }
     public Task<string?> GetRandomCaption(string? category) {
-        return Task.FromResult<string?>(null);
+        return Task.FromResult<string?>(_captions.Random());
     }
 
     public Task<RawImageData?> GetRandomImage(string imageType, float? ratio, List<string>? category) {
@@ -65,5 +65,27 @@ public class StickerProvider : CensorCore.IAssetStore {
         var availableCats = _provider.GetDirectoryContents(string.Empty).Where(f => f.IsDirectory && f.Exists).Select(f => f.Name).ToList();
         return providedCats.Concat(availableCats).Distinct();
     }
+
+    private static List<string> _captions = new() {
+        "beta",
+        "cuck",
+        "edge",
+        "leak",
+        "denied",
+        "pathetic",
+        "sissy",
+        "stupid",
+        "censored",
+        "censored",
+        "censored",
+        "suck cock",
+        "bitch",
+        "locked",
+        "stay locked",
+        "strain",
+        "no betas",
+        "alphas only",
+        "for alphas"
+    };
 }
 #pragma warning restore 1998

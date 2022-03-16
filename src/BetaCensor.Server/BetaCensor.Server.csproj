@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.20" />
-    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.20" />
+    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.21" />
+    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.21" />
     <PackageReference Include="ConfigurEngine" Version="0.2.0" />
     <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />

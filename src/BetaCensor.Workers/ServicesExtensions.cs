@@ -59,6 +59,7 @@ namespace BetaCensor.Workers
         services.AddSingleton<ICensorTypeProvider, PixelationProvider>();
         services.AddSingleton<ICensorTypeProvider, BlackBarProvider>();
         services.AddSingleton<ICensorTypeProvider, StickerProvider>();
+        services.AddSingleton<ICensorTypeProvider, CaptionProvider>();
         services.AddSingleton<ICensoringProvider, ImageSharpCensoringProvider>();
         return services;
     }

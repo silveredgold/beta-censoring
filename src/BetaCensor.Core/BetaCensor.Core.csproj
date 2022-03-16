@@ -6,7 +6,7 @@
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CensorCore" Version="0.0.0-preview.0.20" />
+    <PackageReference Include="CensorCore" Version="0.0.0-preview.0.21" />
     <PackageReference Include="MediatR" Version="10.0.1" />
   </ItemGroup>
 
