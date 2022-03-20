@@ -61,7 +61,7 @@ builder.Services.AddMediatR(conf =>
 {
 }, typeof(Program), typeof(AIService), typeof(BetaCensor.Core.Messaging.CensorImageRequest));
 
-builder.Services.AddBehaviors();
+builder.Services.AddPerformanceData();
 
 if (serverOpts.EnableSignalR) {
     Console.WriteLine("Enabling SignalR interface!");
@@ -95,8 +95,9 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddQueues<CensorImageRequest, CensorImageResponse>();
 builder.Services.AddSingleton<QueueValidator<CensorImageRequest>>(p => new QueueValidator<CensorImageRequest>(req => req.RequestId, p.GetRequiredService<ILogger<QueueValidator<CensorImageRequest>>>()));
-builder.Services.AddHostedService<NotificationWorkerService>();
+// builder.Services.AddHostedService<NotificationWorkerService>();
 builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImageResponse>>(builder.Configuration.GetSection("Server"));
+builder.Services.AddWorkers<DispatchNotificationService<CensorImageResponse>>(1);
 
 builder.Services.AddHostedService<DiscoveryService>();
 

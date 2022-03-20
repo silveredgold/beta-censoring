@@ -14,7 +14,7 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
     private readonly ILogger<CensorImageRequestHandler> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public CensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CensorImageRequestHandler> logger, IServiceScopeFactory scopeFactory, MatchOptions? matchOptions = null)
+    public CensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CensorImageRequestHandler> logger, IServiceScopeFactory scopeFactory)
     => (_logger, _ai, _censor, _scopeFactory) = (logger, aiService, censoringProvider, scopeFactory);
 
     public async Task<CensorImageResponse> Handle(CensorImageRequest request, CancellationToken cancellationToken)
@@ -39,7 +39,8 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
                     return new CensorImageResponse {
                         RequestId = request.RequestId,
                         CensoredImage = censored,
-                        ImageResult = result
+                        ImageResult = result,
+                        CensoringMetadata = new CensoringSession(timer.Elapsed)
                     };
                 } else {
                     return MessageResponse.GetError<CensorImageResponse>(request.RequestId, "AI model failed to process requested image!");

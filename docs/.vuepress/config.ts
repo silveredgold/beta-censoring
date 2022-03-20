@@ -22,7 +22,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         // NavbarGroup
         {
           text: 'User Guide',
-          children: ['/content/installation.md', '/content/usage', '/content/configuration', '/content/beta-safety'],
+          children: ['/content/installation.md', '/content/usage', '/content/configuration', '/content/performance', '/content/beta-safety'],
         },
         // string - page file path
         {

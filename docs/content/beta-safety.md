@@ -24,6 +24,10 @@ Additionally, since Beta Censoring is configurable, you can customise your own p
 
 It's a much more minor point but if it matters to you Beta Censoring is also about a third the size of Beta Safety. That being said, it's kinda academic numbers on either side: ~55MB vs ~160MB.
 
+## Status and Monitoring
+
+Beta Censoring includes its own built-in web interface for checking on the status of the server, providing (limited) information on requests, checking on loaded assets or monitoring the performance of the server and all of its components. While this won't always be useful for all users, it's a very easy way to check on the server, see what assets you have available and track what's taking the time in the censoring process.
+
 ## Customisation
 
 This is a big one so hard to explain succinctly, but essentially every part of the Beta Censoring experience is more configurable and adaptable than it's counterpart in Beta Safety. 
@@ -40,8 +44,15 @@ Beta Censoring offers very fine-grained control of censoring so that clients can
 
 ## Incompatibilities
 
-This is one area where (at the time of writing) Beta Safety absolutely wins. There are three major features you should know that Beta Censoring does not support at this time:
+There are some features from Beta Safety that Beta Censoring doesn't include, either a case of "not yet" or deliberate choice. The list below usually reflects the current state of that feature gap.
 
-  - Hardware acceleration with GPUs
-  - Censoring for the eyes
-  - Sticker censoring (supported but a bit difficult to set up)
+  - GPU Hardware acceleration
+  - Domain-based statistics (not currently planned)
+
+#### GPU Acceleration
+
+There's nothing preventing Beta Censoring from supporting GPU acceleration! The runtime we use (ONNX) has support for multiple forms of acceleration, but I simply don't have the right combination of OS and hardware to test it. If anyone can test and contribute support for acceleration (to Beta Censoring or CensorCore), I'll happily include it.
+
+#### Domain-based statistics
+
+While I am working on a statistics API (to match the existing Performance API), there is no plan for the API to include per-domain information. Storing the origin domains of all client requests turns Beta Censoring into a non-editable, real-time source of data on a user's browsing habits, something I don't feel entirely comfortable with it being. If this does get added, it will be up to clients if they want to provide a domain or not.

@@ -1,15 +1,16 @@
-using BetaCensor.Core.Messaging;
+using BetaCensor.Server.Infrastructure;
 using CensorCore;
 using CensorCore.Censoring;
 using CensorCore.ModelLoader;
-using MediatR;
 
 namespace BetaCensor.Server;
 
 public static class StartupExtensions {
 
-    public static IServiceCollection AddBehaviors(this IServiceCollection services) {
-        return services.AddSingleton<IPipelineBehavior<CensorImageRequest, CensorImageResponse>, BetaCensor.Server.Messaging.ConnectionResponseBehaviour>();
+    public static IServiceCollection AddPerformanceData(this IServiceCollection services) {
+        _ = PerformanceDataService.TryReset();
+        services.AddScoped<IPerformanceDataService, PerformanceDataService>();
+        return services;
     }
 
     public static IServiceCollection AddCensoring(this IServiceCollection services, byte[] model) {
@@ -41,6 +42,9 @@ public static class StartupExtensions {
         services.AddSingleton<ICensorTypeProvider, StickerProvider>();
         services.AddSingleton<ICensorTypeProvider, CaptionProvider>();
         services.AddSingleton<ICensoringProvider, ImageSharpCensoringProvider>();
+        services.AddSingleton<IResultsTransformer, CensorScaleTransformer>();
+        services.AddSingleton<IResultsTransformer, IntersectingMatchMerger>();
+        services.AddSingleton<ICensoringMiddleware, FacialFeaturesMiddleware>();
         return services;
     }
 }

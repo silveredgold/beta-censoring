@@ -15,9 +15,13 @@ public class CensorImageResponse : MessageResponse {
 
     public ImageResult? ImageResult {get;set;}
     public CensoredImage? CensoredImage {get;set;}
+    public CensoringSession? CensoringMetadata {get;set;}
 }
 
-public abstract class MessageResponse {
+public record CensoringSession(TimeSpan CensoringTime) {
+}
+
+public abstract class MessageResponse : INotification {
     public string? Error {get;set;}
     public string? RequestId {get;set;}
 

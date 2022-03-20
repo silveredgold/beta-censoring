@@ -19,9 +19,10 @@
     },
     "homepage": "https://github.com/silveredgold/beta-censoring#readme",
     "devDependencies": {
-        "@silveredgold/beta-censor-client": "^0.0.0-alpha5",
-        "@silveredgold/beta-shared": "^0.0.1-alpha24",
-        "@silveredgold/beta-shared-components": "^0.0.1-alpha20",
+        "@silveredgold/beta-censor-client": "^0.0.0-alpha9",
+        "@silveredgold/beta-shared": "^0.0.1-alpha26",
+        "@silveredgold/beta-shared-components": "^0.0.1-alpha22",
+        "@types/luxon": "^2.3.1",
         "@vicons/ionicons5": "^0.12.0",
         "@vicons/utils": "^0.1.4",
         "@vitejs/plugin-vue": "^2.2.0",
@@ -30,5 +31,10 @@
         "typescript": "^4.6.2",
         "vite": "^2.8.6",
         "vue-tsc": "^0.29.8"
+    },
+    "dependencies": {
+        "apexcharts": "^3.33.2",
+        "luxon": "^2.3.1",
+        "vue3-apexcharts": "^1.4.1"
     }
 }

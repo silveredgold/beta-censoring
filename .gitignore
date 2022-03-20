@@ -402,6 +402,7 @@ dist/
 out/
 tools/
 .vscode/settings.json
+*.db
 
 ## temporarily omitting client code
 client/

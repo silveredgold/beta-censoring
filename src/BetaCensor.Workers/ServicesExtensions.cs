@@ -13,16 +13,16 @@ namespace BetaCensor.Workers
     }
     public static class ServicesExtensions
     {
-        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, int workerCount) where TWorker : IHostedService
+        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, int workerCount) where TWorker : class, IHostedService
         {
             for (int i = 0; i < workerCount; i++)
             {
-                services.AddSingleton<IHostedService, CensoringWorkerService>();
+                services.AddSingleton<IHostedService, TWorker>();
             }
             return services;
         }
 
-        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, IConfigurationSection section, string key = "WorkerCount") where TWorker : IHostedService
+        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, IConfigurationSection section, string key = "WorkerCount") where TWorker : class, IHostedService
         {
             var value = section.GetSection(key).Get<int>();
             if (value == default(int)) value = 2;
@@ -61,6 +61,9 @@ namespace BetaCensor.Workers
         services.AddSingleton<ICensorTypeProvider, StickerProvider>();
         services.AddSingleton<ICensorTypeProvider, CaptionProvider>();
         services.AddSingleton<ICensoringProvider, ImageSharpCensoringProvider>();
+        services.AddSingleton<IResultsTransformer, CensorScaleTransformer>();
+        services.AddSingleton<IResultsTransformer, IntersectingMatchMerger>();
+        services.AddSingleton<ICensoringMiddleware, FacialFeaturesMiddleware>();
         return services;
     }
     }
