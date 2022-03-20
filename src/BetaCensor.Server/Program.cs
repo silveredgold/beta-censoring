@@ -102,7 +102,8 @@ builder.Services.AddWorkers<DispatchNotificationService<CensorImageResponse>>(1)
 builder.Services.AddHostedService<DiscoveryService>();
 
 var stickerOpts = builder.Configuration.GetSection("Stickers");
-builder.Services.AddStickerService(stickerOpts, builder.Environment);
+var captionsOpts = builder.Configuration.GetSection("Captions");
+builder.Services.AddStickerService(stickerOpts, captionsOpts, builder.Environment);
 
 builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
 

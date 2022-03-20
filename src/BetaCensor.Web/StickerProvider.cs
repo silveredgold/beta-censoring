@@ -6,16 +6,32 @@ namespace BetaCensor.Web;
 #pragma warning disable 1998
 public class StickerProvider : CensorCore.IAssetStore {
     private readonly StickerOptions? _options;
+    private readonly List<string> _captions;
     private readonly List<CategoryProvider> _categoryProviders;
     private readonly CompositeFileProvider _provider;
 
-    public StickerProvider(StickerOptions? options, params IFileProvider[] providers) : this(options, providers.AsEnumerable()) {
+    public StickerProvider(StickerOptions? options, CaptionOptions? captions, params IFileProvider[] providers) : this(options, captions, providers.AsEnumerable()) {
     }
-    public StickerProvider(StickerOptions? options, IEnumerable<IFileProvider> providers) {
+    public StickerProvider(StickerOptions? options, CaptionOptions? captions, IEnumerable<IFileProvider> providers) {
         _options = options;
+        _captions = LoadCaptions(captions) ?? _defaultCaptions;
         _categoryProviders = providers.Where(p => p is CategoryProvider).Cast<CategoryProvider>().ToList();
         _provider = new CompositeFileProvider(providers);
     }
+
+    private List<string>? LoadCaptions(CaptionOptions? options) {
+        if (options == null) return null;
+        try {
+            var list = options.Captions;
+            if (options.FilePaths.Any()) {
+                list.AddRange(options.FilePaths.Where(f => File.Exists(f) && Path.GetExtension(f) == ".txt").SelectMany(f => File.ReadAllLines(f)));
+            }
+            return list;
+        } catch {
+            return null;
+        }
+    }
+
     public Task<string?> GetRandomCaption(string? category) {
         return Task.FromResult<string?>(_captions.Random());
     }
@@ -66,7 +82,7 @@ public class StickerProvider : CensorCore.IAssetStore {
         return providedCats.Concat(availableCats).Distinct();
     }
 
-    private static List<string> _captions = new() {
+    private static List<string> _defaultCaptions = new() {
         "beta",
         "cuck",
         "edge",

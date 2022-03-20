@@ -102,6 +102,44 @@ Any images in any of the folders provided for a given category (`Discreet` and `
 
 You also don't need to worry about images being the exact right dimension! Beta Censoring will check the available images and find one that's aspect ratio is _close enough_ to the censoring it's being used for. While we recommend sticking mostly to square-ish images, you don't need to worry too much about the exact dimensions.
 
+## Captions Configuration
+
+> Beta Censoring includes a default set of captions so you only need to do this if you want to change them.
+
+Captions work similarly to stickers to configure, but with a `Captions` configuration section that looks a little different:
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+Captions:
+  Captions:
+    - "unworthy"
+    - "not for you"
+  FilePaths:
+    - "D:/captions.txt"
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "Captions": {
+        "Captions": ["unworthy", "not for you"],
+        "FilePaths": ["D:/captions.txt"]
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+In short, you can include the captions directly in the configuration file (as a list in the `Captions` property) or include any number of text files where each line of the text file is one caption (as a list of paths in the `FilePaths` property).
+
+While the API supports it, the current default caption provider ignores requested categories
+
 ## Censoring Configuration
 
 You can also fine-tune the censoring settings used by all clients using the server configuration file. You can separately adjust the minimum confidence (between 0 and 1) for Beta Censoring to censor a result from the AI, as well as tune the scores required for individual matches ('classes' as the AI calls them). For example, the default scores range from 0.4 to 0.55 (the default) up to 0.6 for some of the trickier covered classes. If you want to make the censoring more trigger-happy overall, you can adjust the `MinimumScore` option, like below:

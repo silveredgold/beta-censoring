@@ -6,3 +6,8 @@ public class StickerOptions {
     public float RatioMargin {get;set;} = 25F;
 
 }
+
+public class CaptionOptions {
+    public List<string> Captions {get;set;} = new();
+    public List<string> FilePaths {get;set;} = new();
+}

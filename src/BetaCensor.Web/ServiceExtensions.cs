@@ -7,8 +7,9 @@ using Microsoft.Extensions.FileProviders;
 
 namespace Microsoft.Extensions.DependencyInjection {
     public static class ServiceExtensions {
-        public static IServiceCollection AddStickerService(this IServiceCollection services, IConfigurationSection section, IWebHostEnvironment env) {
-            var opts = section.Get<StickerOptions>() ?? new StickerOptions();
+        public static IServiceCollection AddStickerService(this IServiceCollection services, IConfigurationSection stickerSection, IConfigurationSection captionSection, IWebHostEnvironment env) {
+            var opts = stickerSection.Get<StickerOptions>() ?? new StickerOptions();
+            var captionOpts = captionSection.Get<CaptionOptions>() ?? new CaptionOptions();
             var providers = new List<IFileProvider>();
             var defaultStorePath = Path.Join(env.ContentRootPath, "stickers");
             if (Directory.Exists(defaultStorePath)) {
@@ -33,7 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection {
                     }
                 }
             }
-            var service = new StickerProvider(opts, providers);
+            var service = new StickerProvider(opts, captionOpts, providers);
             services.AddSingleton<StickerProvider>(service);
             services.AddSingleton<CensorCore.IAssetStore, StickerProvider>(p => p.GetRequiredService<StickerProvider>());
             return services;
