@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaCensor.Server", "BetaCe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaCensor.Workers", "BetaCensor.Workers\BetaCensor.Workers.csproj", "{37616BDD-7084-4649-9EFD-8974A0DC2D79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaCensor.Web.Status", "BetaCensor.Web.Status\BetaCensor.Web.Status.csproj", "{302202F5-DB8D-4523-9D82-A9839D4E4654}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{37616BDD-7084-4649-9EFD-8974A0DC2D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37616BDD-7084-4649-9EFD-8974A0DC2D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37616BDD-7084-4649-9EFD-8974A0DC2D79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{302202F5-DB8D-4523-9D82-A9839D4E4654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{302202F5-DB8D-4523-9D82-A9839D4E4654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{302202F5-DB8D-4523-9D82-A9839D4E4654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{302202F5-DB8D-4523-9D82-A9839D4E4654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

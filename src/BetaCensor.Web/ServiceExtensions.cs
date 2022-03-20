@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection {
             var captionOpts = captionSection.Get<CaptionOptions>() ?? new CaptionOptions();
             var providers = new List<IFileProvider>();
             var defaultStorePath = Path.Join(env.ContentRootPath, "stickers");
+            var defaultCaptionPath = Path.Join(env.ContentRootPath, "captions.txt");
             if (Directory.Exists(defaultStorePath)) {
                 var defaultProvider = defaultStorePath.GetProvider(true);
                 if (defaultProvider != null) {
@@ -34,11 +35,13 @@ namespace Microsoft.Extensions.DependencyInjection {
                     }
                 }
             }
+            if (File.Exists(defaultCaptionPath)) {
+                captionOpts.FilePaths.Add(defaultCaptionPath);
+            }
             var service = new StickerProvider(opts, captionOpts, providers);
             services.AddSingleton<StickerProvider>(service);
             services.AddSingleton<CensorCore.IAssetStore, StickerProvider>(p => p.GetRequiredService<StickerProvider>());
             return services;
-
         }
     }
 }

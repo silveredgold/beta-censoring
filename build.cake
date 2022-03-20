@@ -107,7 +107,7 @@ Task("Pages-Build")
 	.Does(() =>
 {
 	Information("Building Status page site");
-	var siteRootPath = "./src/BetaCensor.Server/ClientApp";
+	var siteRootPath = "./src/BetaCensor.Web.Status/ClientApp";
 	// if (!string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_REF"))) {
 	NpmCi(settings => { settings.FromPath(siteRootPath); });
 	// } else {
