@@ -100,6 +100,7 @@ var captionsOpts = builder.Configuration.GetSection("Captions");
 builder.Services.AddStickerService(stickerOpts, captionsOpts, builder.Environment);
 
 builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
+builder.Services.AddSingleton<CensorCore.Censoring.GlobalCensorOptions>(ServerConfigurationExtensions.BuildCensorOptions);
 
 
 var app = builder.Build();

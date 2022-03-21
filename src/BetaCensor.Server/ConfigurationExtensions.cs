@@ -1,5 +1,6 @@
 using BetaCensor.Web.Performance;
 using CensorCore;
+using CensorCore.Censoring;
 
 namespace BetaCensor.Server; 
 public static class ServerConfigurationExtensions {
@@ -16,6 +17,17 @@ public static class ServerConfigurationExtensions {
             foreach (var classScore in matchOpts.ClassScores) {
                 defaults.ClassScores[classScore.Key] = classScore.Value;
             }
+        }
+        return defaults;
+    }
+    internal static GlobalCensorOptions BuildCensorOptions(this IServiceProvider provider) {
+        var config = provider.GetRequiredService<IConfiguration>();
+        var section = config.GetSection("CensorOptions");
+        var defaults = provider.GetService<GlobalCensorOptions>() ?? new CensorCore.Censoring.GlobalCensorOptions();
+        if (section.Exists() && section.Get<GlobalCensorOptions>() is var matchOpts && matchOpts is not null) {
+            defaults.AllowTransformers = matchOpts.AllowTransformers ?? true;
+            defaults.RelativeCensorScale = matchOpts.RelativeCensorScale ?? defaults.RelativeCensorScale;
+            defaults.PaddingScale = matchOpts.PaddingScale ?? defaults.PaddingScale;
         }
         return defaults;
     }
