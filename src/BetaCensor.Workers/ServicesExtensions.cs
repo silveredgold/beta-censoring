@@ -4,26 +4,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BetaCensor.Workers
-{
-    public class WorkerConfiguration
-    {
+namespace BetaCensor.Workers {
+    public class WorkerConfiguration {
         public int WorkerCount { get; set; }
 
     }
-    public static class ServicesExtensions
-    {
-        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, int workerCount) where TWorker : class, IHostedService
-        {
-            for (int i = 0; i < workerCount; i++)
-            {
+    public static class ServicesExtensions {
+        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, int workerCount) where TWorker : class, IHostedService {
+            for (int i = 0; i < workerCount; i++) {
                 services.AddSingleton<IHostedService, TWorker>();
             }
             return services;
         }
 
-        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, IConfigurationSection section, string key = "WorkerCount") where TWorker : class, IHostedService
-        {
+        public static IServiceCollection AddWorkers<TWorker>(this IServiceCollection services, IConfigurationSection section, string key = "WorkerCount") where TWorker : class, IHostedService {
             var value = section.GetSection(key).Get<int>();
             if (value == default(int)) value = 2;
             Console.WriteLine($"Registering {value} '{typeof(TWorker).Name}' workers");
@@ -40,31 +34,29 @@ namespace BetaCensor.Workers
             return services;
         }
 
-        internal static IServiceCollection AddCensoring(this IServiceCollection services, byte[] model) {
+        public static IServiceCollection AddCensoring(this IServiceCollection services, byte[] model) {
 
-        services.AddSingleton<IImageHandler>(p => new ImageSharpHandler());
-        services.AddSingleton<AIService>(p =>
-        {
-            // var loader = p.GetRequiredService<ModelLoader>();
-            // var model = await loader.GetModel();
-            if (model == null) {
-                throw new InvalidOperationException("Could not load model from any available source!");
-            }
-            return AIService.Create(model, p.GetRequiredService<IImageHandler>(), false);
-        });
+            services.AddSingleton<IImageHandler>(p => new ImageSharpHandler());
+            services.AddSingleton<AIService>(p =>
+            {
+                if (model == null) {
+                    throw new InvalidOperationException("Could not load model from any available source!");
+                }
+                return AIService.Create(model, p.GetRequiredService<IImageHandler>(), false);
+            });
 
-        services.AddSingleton<IAssetStore, EmptyAssetStore>();
-        services.AddSingleton<GlobalCensorOptions>();
-        services.AddSingleton<ICensorTypeProvider, BlurProvider>();
-        services.AddSingleton<ICensorTypeProvider, PixelationProvider>();
-        services.AddSingleton<ICensorTypeProvider, BlackBarProvider>();
-        services.AddSingleton<ICensorTypeProvider, StickerProvider>();
-        services.AddSingleton<ICensorTypeProvider, CaptionProvider>();
-        services.AddSingleton<ICensoringProvider, ImageSharpCensoringProvider>();
-        services.AddSingleton<IResultsTransformer, CensorScaleTransformer>();
-        services.AddSingleton<IResultsTransformer, IntersectingMatchMerger>();
-        services.AddSingleton<ICensoringMiddleware, FacialFeaturesMiddleware>();
-        return services;
-    }
+            services.AddSingleton<IAssetStore, EmptyAssetStore>();
+            services.AddSingleton<GlobalCensorOptions>();
+            services.AddSingleton<ICensorTypeProvider, BlurProvider>();
+            services.AddSingleton<ICensorTypeProvider, PixelationProvider>();
+            services.AddSingleton<ICensorTypeProvider, BlackBarProvider>();
+            services.AddSingleton<ICensorTypeProvider, StickerProvider>();
+            services.AddSingleton<ICensorTypeProvider, CaptionProvider>();
+            services.AddSingleton<ICensoringProvider, ImageSharpCensoringProvider>();
+            services.AddSingleton<IResultsTransformer, CensorScaleTransformer>();
+            services.AddSingleton<IResultsTransformer, IntersectingMatchMerger>();
+            services.AddSingleton<ICensoringMiddleware, FacialFeaturesMiddleware>();
+            return services;
+        }
     }
 }

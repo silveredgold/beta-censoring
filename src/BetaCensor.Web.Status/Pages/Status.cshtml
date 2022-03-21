@@ -1,0 +1,14 @@
+@page "/"
+@model BetaCensor.Web.Status.Pages.StatusModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewData["Title"] = "Server Status";
+}
+@Html.AntiForgeryToken()
+<div id="app"></div>
+
+@section scripts {
+    <environment names="Development">
+    <script type="module" src="~/dist/main.ts"></script>
+    </environment>
+}

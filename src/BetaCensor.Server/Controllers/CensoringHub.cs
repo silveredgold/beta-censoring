@@ -61,12 +61,4 @@ public class CensoringHub : Hub<ICensorServiceClient> {
         }
         return Task.CompletedTask;
     }
-
-    // public async Task<bool> OpenCensoringSession([FromServices]ModelLoader loader, string sessionId, IEnumerable<CensorImageRequest> requests) {
-    //     var model = await loader.GetModel();
-    //     var context = new CensorContext();
-    //     context.Build(model, services => {
-    //         services.AddHostedService<NotificationWorkerService>();
-    //     })
-    // }
 }

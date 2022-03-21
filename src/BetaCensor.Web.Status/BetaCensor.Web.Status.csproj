@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <Import Project="../BetaCensor.shared.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\BetaCensor.Core\BetaCensor.Core.csproj" />
+    <ProjectReference Include="..\BetaCensor.Web\BetaCensor.Web.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <RootNamespace>BetaCensor.Web</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <None Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <Content Remove="ClientApp\*.json" />
+  </ItemGroup>
+
+</Project>

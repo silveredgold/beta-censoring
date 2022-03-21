@@ -1,0 +1,15 @@
+﻿@page "/config"
+@model BetaCensor.Web.Status.Pages.ConfigurationModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewData["Title"] = "Server Configuration";
+    ViewData["EntryPoint"] = "config";
+}
+@Html.AntiForgeryToken()
+<div id="app"></div>
+
+@section scripts {
+    <environment names="Development">
+        <script type="module" src="~/dist/config.ts"></script>
+    </environment>
+}

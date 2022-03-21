@@ -1,15 +1,14 @@
 using BetaCensor.Core.Messaging;
 using BetaCensor.Server;
 using BetaCensor.Server.Discovery;
-using BetaCensor.Server.Messaging;
 using BetaCensor.Web;
+using BetaCensor.Web.Status;
 using BetaCensor.Workers;
 using CensorCore;
 using CensorCore.ModelLoader;
 using ConfigurEngine;
 using MediatR;
 using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Extensions.FileProviders;
 using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +27,6 @@ builder.Host.UseWindowsService();
 
 var loader = new ModelLoaderBuilder()
         .AddDefaultPaths()
-        // .AddSearchPath(config)
         .SearchAssembly(System.Reflection.Assembly.GetEntryAssembly())
         .Build();
 var model = await loader.GetModel();
@@ -46,20 +44,16 @@ if (serverOpts.EnableRest) {
 }
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
-builder.Services.AddRazorPages();
+builder.Services.AddStatusPages<ServerInfoService>(builder.Environment);
 
-var physicalProvider = builder.Environment.ContentRootFileProvider;
-var manifestEmbeddedProvider =
-    new ManifestEmbeddedFileProvider(typeof(Program).Assembly, "wwwroot");
-var compositeProvider =
-    new CompositeFileProvider(physicalProvider, manifestEmbeddedProvider);
-builder.Services.AddSingleton<IFileProvider>(compositeProvider);
-
-builder.Services.AddMediatR(conf =>
-{
-}, typeof(Program), typeof(AIService), typeof(BetaCensor.Core.Messaging.CensorImageRequest));
+builder.Services.AddMediatR(
+    typeof(Program), 
+    typeof(AIService), 
+    typeof(BetaCensor.Core.Messaging.CensorImageRequest), 
+    typeof(BetaCensor.Web.Controllers.InfoController)
+);
 
 builder.Services.AddPerformanceData();
 
@@ -110,35 +104,22 @@ builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatc
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment()) {
+app.UseSwagger();
+app.UseSwaggerUI();
+// }
 
-// app.UseHttpsRedirection();
 app.UseRouting();
-app.UseAuthorization();
+// app.UseAuthorization();
 app.UseEndpoints(e =>
 {
-    e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 4194304);
+    if (serverOpts.EnableSignalR) {
+        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 4194304);
+    }
 });
 // app.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live");
 
 app.MapControllers();
 app.UseWebSockets();
-if (app.Environment.IsDevelopment()) {
-    app.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "ClientApp";
-        spa.Options.DevServerPort = 3000;
-        spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
-    });
-}
-else {
-    app.UseStaticFiles(new StaticFileOptions {
-        FileProvider = compositeProvider
-    });
-}
-app.MapRazorPages();
+app.UseStatusPages(app.Environment);
 app.Run();
