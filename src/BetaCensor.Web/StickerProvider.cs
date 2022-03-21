@@ -26,7 +26,7 @@ public class StickerProvider : CensorCore.IAssetStore {
             if (options.FilePaths.Any()) {
                 list.AddRange(options.FilePaths.Where(f => File.Exists(f) && Path.GetExtension(f) == ".txt").SelectMany(f => File.ReadAllLines(f)));
             }
-            return list;
+            return list.Any(s => !string.IsNullOrWhiteSpace(s)) ? list : null;
         } catch {
             return null;
         }
