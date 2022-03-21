@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import { NPageHeader, NGrid, NGi, NAvatar, NStatistic, NButton, NSpace, NIcon, NPopover, NThing } from "naive-ui";
 import { Settings, Refresh, Alert, Help } from "@vicons/ionicons5";
-import { computed, toRefs, ref, onMounted } from "vue";
+import { computed, toRefs, ref, Ref, onMounted } from "vue";
 import { ConnectionStatus } from "@silveredgold/beta-shared-components";
 import type { HostConfigurator } from '@silveredgold/beta-shared-components'
 import iconSrc from '../assets/siteIcon.png'
@@ -100,6 +100,7 @@ const coreVersion = ref("v0.0.0");
 const serverVersion = ref("v0.0.0");
 const requestCount = ref(0);
 const hostname = ref("");
+const requestHeaders: Ref<HeadersInit|undefined> = ref(undefined);
 
 const {title} = toRefs(props);
 
@@ -107,6 +108,7 @@ const extraText = computed(() => `Server is now running${hostname.value ? " on "
 
 onMounted(() => {
     const headers = useRazorRequest();
+    requestHeaders.value = headers;
     fetch('/censoring/info', { headers }).then(resp => {
         console.log(resp);
         resp.json().then(json => {
@@ -124,8 +126,7 @@ onMounted(() => {
 });
 
 const refresh = async () => {
-    const headers = useRazorRequest();
-    const resp = await fetch('/?handler=requestCount', { headers });
+    const resp = await fetch('/?handler=requestCount', { headers: requestHeaders.value });
     console.log(resp);
     var json = await resp.json();
     console.log(JSON.stringify(json));

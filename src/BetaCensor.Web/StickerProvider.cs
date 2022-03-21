@@ -36,6 +36,7 @@ public class StickerProvider : CensorCore.IAssetStore {
         return Task.FromResult<string?>(_captions.Random());
     }
 
+    [System.Diagnostics.DebuggerHidden]
     public Task<RawImageData?> GetRandomImage(string imageType, float? ratio, List<string>? category) {
         throw new NotImplementedException();
     }
