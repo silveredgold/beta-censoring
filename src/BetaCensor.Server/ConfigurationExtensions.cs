@@ -23,7 +23,7 @@ public static class ServerConfigurationExtensions {
     internal static GlobalCensorOptions BuildCensorOptions(this IServiceProvider provider) {
         var config = provider.GetRequiredService<IConfiguration>();
         var section = config.GetSection("CensorOptions");
-        var defaults = provider.GetService<GlobalCensorOptions>() ?? new CensorCore.Censoring.GlobalCensorOptions();
+        var defaults = new CensorCore.Censoring.GlobalCensorOptions();
         if (section.Exists() && section.Get<GlobalCensorOptions>() is var matchOpts && matchOpts is not null) {
             defaults.AllowTransformers = matchOpts.AllowTransformers ?? true;
             defaults.RelativeCensorScale = matchOpts.RelativeCensorScale ?? defaults.RelativeCensorScale;
