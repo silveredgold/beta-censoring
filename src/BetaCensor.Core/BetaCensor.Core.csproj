@@ -6,9 +6,12 @@
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CensorCore" Version="0.0.0-preview.0.36" />
+    <PackageReference Include="CensorCore" Version="0.0.0-preview.0.38" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="ModulEngine" Version="0.0.0-preview.0.5" />
   </ItemGroup>
+  <!-- <ItemGroup>
+    <ProjectReference Include="../../../censor-core/src/CensorCore/CensorCore.csproj" />
+  </ItemGroup> -->
 
 </Project>

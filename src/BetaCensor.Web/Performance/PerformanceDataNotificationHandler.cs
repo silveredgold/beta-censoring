@@ -24,8 +24,8 @@ public class PerformanceDataNotificationHandler : INotificationHandler<CensorIma
                 // var records = db.GetCollection<PerformanceRecord>("requests");
                 // records.Insert(new PerformanceRecord(result));
             }
-            catch {
-                _logger.LogWarning($"Error encountered while saving performance data for ${result.RequestId}.");
+            catch (Exception e) {
+                _logger.LogWarning(e, $"Error encountered while saving performance data for ${result.RequestId}.");
             }
         }
         return Task.CompletedTask;

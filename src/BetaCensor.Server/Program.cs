@@ -62,6 +62,8 @@ if (serverOpts.EnableSignalR) {
     builder.Services.AddSignalR(o =>
     {
         o.EnableDetailedErrors = true;
+        o.KeepAliveInterval = TimeSpan.FromSeconds(10);
+        o.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
     }).AddJsonProtocol(options =>
     {
         options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
