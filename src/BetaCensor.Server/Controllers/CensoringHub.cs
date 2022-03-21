@@ -25,7 +25,7 @@ public class CensoringHub : Hub<ICensorServiceClient> {
         request.RequestId ??= Guid.NewGuid().ToString();
         _logger.LogInformation($"Got request for {request.RequestId}");
         await Groups.AddToGroupAsync(Context.ConnectionId, request.RequestId);
-        _logger.LogInformation($"Group registered for {request.RequestId}");
+        _logger.LogDebug($"Group registered for {request.RequestId}");
         try {
             var requestQueue = _queue;
             _ = requestQueue.Enqueue(request);
@@ -34,8 +34,7 @@ public class CensoringHub : Hub<ICensorServiceClient> {
             _ = Clients.Group(request.RequestId).OnRequestUpdate(request.RequestId, e.ToString());
         }
         timer.Stop();
-        _logger.LogInformation($"Action timer: {timer.Elapsed.TotalSeconds}");
-        _logger.LogInformation(DateTime.UtcNow.ToString("o"));
+        _logger.LogTrace($"Action timer: {timer.Elapsed.TotalSeconds}");
         return true;
     }
 

@@ -46,7 +46,7 @@ public class PerformanceDataService : IPerformanceDataService {
 
     public Task AddRecord(PerformanceRecord record) {
         var requests = GetRecordCollection();
-        requests.Insert(record);
+        requests.Upsert(record);
         return Task.CompletedTask;
     }
 
