@@ -90,8 +90,10 @@ builder.Services.Configure<JsonOptions>(options =>
 });
 
 builder.Services.AddQueues<CensorImageRequest, CensorImageResponse>();
-builder.Services.AddSingleton<QueueValidator<CensorImageRequest>>(p => new QueueValidator<CensorImageRequest>(req => req.RequestId, p.GetRequiredService<ILogger<QueueValidator<CensorImageRequest>>>()));
-// builder.Services.AddHostedService<NotificationWorkerService>();
+builder.Services.AddDefaultManagedRequestQueue();
+// we don't want to validate this at the queue level because it would get *silently* dropped, not rejected.
+// if it happens anywhere, it should be in the individual APIs before being queued.
+// builder.Services.AddDefaultManagedRequestQueue((req => req.ImageUrl, url => (url ?? string.Empty).EndsWith(".gif")));
 builder.Services.AddWorkers<DispatchWorkerService<CensorImageRequest, CensorImageResponse>>(builder.Configuration.GetSection("Server"));
 builder.Services.AddWorkers<DispatchNotificationService<CensorImageResponse>>(1);
 

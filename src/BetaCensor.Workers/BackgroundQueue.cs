@@ -4,7 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace BetaCensor.Workers {
     public class BackgroundQueue<T> : IAsyncBackgroundQueue<T> where T : class {
-        public BackgroundQueue(ILogger<BackgroundQueue<T>> logger, QueueValidator<T>? manager = null)
+        public BackgroundQueue(ILogger<BackgroundQueue<T>> logger)
+        {
+            this._logger = logger;
+        }
+
+        public BackgroundQueue(ILogger<BackgroundQueue<T>> logger, QueueValidator<T> manager)
         {
             this._logger = logger;
             this._manager = manager;

@@ -7,11 +7,17 @@ namespace BetaCensor.Workers
         private readonly Func<TRequest, string?> _matcher;
         private readonly ILogger<QueueValidator<TRequest>> _logger;
         private readonly List<string> _cancelled = new();
+        private List<KeyValuePair<Func<TRequest, string?>, Predicate<string?>>> _filters = new();
 
         public QueueValidator(Func<TRequest, string?> matcher, ILogger<QueueValidator<TRequest>> logger)
         {
             _matcher = matcher;
             _logger = logger;
+        }
+
+        public QueueValidator<TRequest> AddFilter(Func<TRequest, string?> matcher, Predicate<string?> filter) {
+            _filters.Add(new KeyValuePair<Func<TRequest, string?>, Predicate<string?>>(matcher, filter));
+            return this;
         }
 
         public void CancelRequests(IEnumerable<string> identifiers) {

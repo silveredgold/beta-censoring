@@ -1,8 +1,10 @@
+using BetaCensor.Core.Messaging;
 using CensorCore;
 using CensorCore.Censoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace BetaCensor.Workers {
     public class WorkerConfiguration {
@@ -57,6 +59,17 @@ namespace BetaCensor.Workers {
             services.AddSingleton<IResultsTransformer, IntersectingMatchMerger>();
             services.AddSingleton<ICensoringMiddleware, FacialFeaturesMiddleware>();
             return services;
+        }
+
+        public static IServiceCollection AddDefaultManagedRequestQueue(this IServiceCollection services, params (Func<CensorImageRequest, string?> Matcher, Predicate<string?> Filter)[] filters) {
+            return services.AddSingleton<QueueValidator<CensorImageRequest>>(p => {
+                var manager = new QueueValidator<CensorImageRequest>(req => req.RequestId, p.GetRequiredService<ILogger<QueueValidator<CensorImageRequest>>>());
+                foreach (var validator in filters)
+                {
+                    manager.AddFilter(validator.Matcher, validator.Filter);
+                }
+                return manager;
+            });
         }
     }
 }
