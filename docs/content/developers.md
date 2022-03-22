@@ -11,6 +11,12 @@ By default, Beta Censoring will run with 2 workers (i.e. up to 2 censoring jobs 
 
 > There is a plugin API in the works, if you're interested in tweaking/replacing the inner workings of Beta Censoring.
 
+### Projects
+
+Just like CensorCore, BetaCensor is designed to be as flexible and configurable as possible, so the project is split up into distinct components to make reuse and integration easier. BetaCensor.Server is the main server entry point for Beta Censoring. In turn, it uses BetaCensor.Web and BetaCensor.Web.Status for most of the HTTP moving parts and BetaCensor.Workers for the worker queues (that do the actual censoring). 
+
+This might seem a little complex at first glance (it is) but does make keeping things decoupled a little easier. It also means that you could actually embed the vast majority of Beta Censoring into your own server if you wanted to.
+
 ### CensorCore
 
 [CensorCore](https://github.com/silveredgold/censor-core) is the underlying framework responsible for handling the nitty-gritty of both the AI inference, and the actual image censoring. CensoreCore is used to abstract the intricacies of the ONNX Runtime responsible for running the model (as well as the model itself) away from the Beta Censoring server. Beta Censoring is just responsible for providing much friendlier interfaces and a running server for non-native-C# clients.

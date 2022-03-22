@@ -6,10 +6,9 @@ That does mean that you need to leave it running though, as clients will need to
 
 > If you're a more advanced user, Beta Censoring can be configured as a Windows Service or Systemd service to have the server running, but not visible.
 
-There is a simple web interface available to check on the status of a running Beta Censoring server though. To check it, just open your browser and navigate to [`http://beta-censoring.local:2382/`](http://beta-censoring.local:2382/) and you should see a simple status panel to check the details of your server. At present, this status panel is just to check on your server details and configuration (though more features are planned).
+There is a simple web interface available to check on the status of a running Beta Censoring server though. To check it, just open your browser and navigate to [`http://beta-censoring.local:2382/`](http://beta-censoring.local:2382/) and you should see a simple status panel to check the details of your server. At present, this status panel is just to check on your server details, performance and configuration (though more features are planned).
 
 > If that URL doesn't work, try directly navigating to the server URL. For example, that would be [`http://localhost:2382`](http://localhost:2382) on the PC you're running the server on.
-
 
 
 ## Clients

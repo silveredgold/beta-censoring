@@ -13,11 +13,13 @@ Beta Protection is designed from the ground up to be a flexible bells-and-whistl
   - Beta Protection can work with backends other than Beta Censoring (notably including the unrelated proprietary Beta Safety app)
   - Beta Censoring just exposes a set of APIs over HTTP and WebSockets so that any app can use it, not just Beta Protection.
 
+> As of v0.0.4 the HTTP and SignalR APIs are enabled by default, but we don't have good documentation for them yet.
+
 ### Is it stable and/or finished?
 
 **Kind of** and **no**, respectively. It will definitely work and I wouldn't call it unstable, but there's no way around the fact this is an early preview version of Beta Censoring so there's a good chance you might spot a few bugs.
 
-As for completion, not even close. To be clear, _it currently works_, there's just a lot more I intend to do with the project. Some parts (like configuration) are harder than they need to be, and it's more dependent on client apps (like Beta Protection) than it should be. Additionally, there's a few features that got put in the "get-back-to-that" bucket that need to be finished (like sticker support).
+As for completion, not even close. To be clear, _it currently works_ and works pretty well, but there's just a lot more I intend to do with the project. Some parts (like configuration) are harder than they need to be, and it's more dependent on client apps (like Beta Protection) than it should be. Additionally, there's a few features that got put in the "get-back-to-that" bucket that need to be finished (like improvements to sticker support, and some much-needed refactoring).
 
 ### How is this different from Beta Safety?
 

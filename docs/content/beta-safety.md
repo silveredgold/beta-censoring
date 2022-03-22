@@ -22,7 +22,7 @@ Due to completely different stacks and some pretty significant changes in how th
 
 Additionally, since Beta Censoring is configurable, you can customise your own performance. If you're okay with slower censoring times for less performance impact, you can turn down the workers and caching options. Alternatively, if you have a beefy rig and don't mind your PC working a bit harder, add some more workers and caching, and revel in the faster response times.
 
-It's a much more minor point but if it matters to you Beta Censoring is also about a third the size of Beta Safety. That being said, it's kinda academic numbers on either side: ~55MB vs ~160MB.
+You can find a ton more information on Beta Censoring's performance, including how to monitor and tweak it, in [the performance docs](./performance.md).
 
 ## Status and Monitoring
 
