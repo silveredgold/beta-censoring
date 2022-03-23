@@ -32,6 +32,31 @@ public static class ServerConfigurationExtensions {
         return defaults;
     }
 
+    internal static Func<IServiceProvider, IImageHandler> BuildImageHandler(ServerOptions serverOptions) {
+        int? maxWidth = null;
+        int? maxHeight = null;
+        if (!string.IsNullOrWhiteSpace(serverOptions.ImageDimensions)) {
+            try {
+                var dims = serverOptions.ImageDimensions.Trim().Split(':', 'x').ToList();
+                if (dims.Count == 1) {
+                    maxHeight = maxWidth = ParseDimension(dims[0]);
+                } else if (dims.Count == 2) {
+                    maxWidth = ParseDimension(dims[0]);
+                    maxHeight = ParseDimension(dims[1]);
+                }
+            } catch {
+                //ignored
+            }
+        }
+        return p => {
+            return new ImageSharpHandler(maxWidth, maxHeight);
+        };
+    }
+
+    private static int? ParseDimension(string s) {
+        return int.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture, out var dim) ? dim : null;
+    }
+
     public static IServiceCollection AddPerformanceData(this IServiceCollection services) {
         _ = PerformanceDataService.TryReset();
         services.AddScoped<IPerformanceDataService, PerformanceDataService>();

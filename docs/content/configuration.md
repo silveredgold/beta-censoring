@@ -235,3 +235,36 @@ Server:
 It may be tempting to dramatically increase the `WorkerCount` setting to get more workers censoring images at once, but this is not usually a good idea.
 
 Increasing the worker count will **dramatically** increase the load on your PC while censoring. Additionally, adding more workers actually has the potential to _slow down_ censoring, especially if you add more workers than your PC can reasonably run at once. A reasonable rule of thumb is to use half the number of cores your CPU has. If you're okay with things *really* slowing down during censoring, you can try going as high as the number of cores, but it's **strongly recommended** to not go above this number.
+
+### Scaling Configuration
+
+There is one additional configuration item you might be interested in: image rescaling. When Beta Censoring actually runs an image through the AI, it will (if necessary) scale the image down a little to speed things up. By default, though, it will only scale anything larger than 1080p. This default should result in reasonably accurate matching from the AI with reasonable performance. 
+
+If you're okay with less accurate matching and want faster processing, you can tell Beta Censoring to scale images down before processing them. That will result in faster but less accurate results from the AI. To do so, change the `ImageDimensions` option in the server config:
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+Server:
+  ImageDimensions: "1280x720" # note the quotes are required!
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "Server": {
+        "ImageDimensions": "1280x720"
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+This would result in all images being scaled down to 720p before being handed to the AI. You can specify either a set of `<WIDTH>x<HEIGHT>` dimensions (as above) or just a single number for both.
+
+> Note that censoring (and therefore the final cesnored image) will always be on the full-size image.

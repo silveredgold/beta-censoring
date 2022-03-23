@@ -36,6 +36,8 @@ builder.Services.AddCensoring(model);
 var serverOpts = builder.Configuration.GetSection("Server").Get<ServerOptions>();
 serverOpts ??= new ServerOptions();
 
+builder.Services.AddSingleton<IImageHandler>(ServerConfigurationExtensions.BuildImageHandler(serverOpts));
+
 // builder.Services.AddSpaStaticFiles(options => {options.RootPath = "wwwroot";});
 var mvc = builder.Services.AddControllers();
 if (serverOpts.EnableRest) {

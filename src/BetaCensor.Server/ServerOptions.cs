@@ -6,5 +6,6 @@ namespace BetaCensor.Server
         public bool EnableSignalR {get;set;} = true;
         public bool EnableRest {get;set;} = true;
         public string? SocketPath {get;set;}
+        public string? ImageDimensions {get;set;} = null;
     }
 }
