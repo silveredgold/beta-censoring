@@ -32,6 +32,7 @@ var loader = new ModelLoaderBuilder()
 var model = await loader.GetModel();
 if (model == null) throw new InvalidDataException("Failed to retrieve AI model! Aborting...");
 builder.Services.AddCensoring(model);
+builder.Services.AddSingleton<CensorCore.Censoring.ICensoringMiddleware, BetaCensor.Core.ObfuscationMiddleware>();
 
 var serverOpts = builder.Configuration.GetSection("Server").Get<ServerOptions>();
 serverOpts ??= new ServerOptions();

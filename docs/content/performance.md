@@ -31,6 +31,8 @@ As covered in the [Configuration](./configuration.md) guide, you can control how
 
 Beta Censoring makes any of the censor types in CensorCore available for clients to request, which includes (at least) `Blur`, `BlackBar`, `Caption`, `Pixelation` and `Sticker`. That being said, some of these are more intensive than others to actually apply to an image. In particular, black bar will generally be the fastest while stickers will generally be the slowest with most of the others between those two. In particular, if you're noticing the _censoring time_ increasing but not the _inference time_ then you may want to consider using less intensive censoring types.
 
+Additionally, obfuscation is applied last and to the whole image so it can have a noticeable performance impact, especially on high-resolution images. If you're using obfuscation, try turning it off and see if that improves response times.
+
 ### Image Size
 
 As you'd expect, the larger an image the harder it is to both detect matches and censor those matches. Beta Censoring will always scale large images down for the AI (to improve performance) but will then apply censoring to the full-size image and return the censored images at full resolution. This improves quality but does slow the server down when censoring very large images.

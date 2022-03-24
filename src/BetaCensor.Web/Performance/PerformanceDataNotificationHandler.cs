@@ -14,11 +14,11 @@ public class PerformanceDataNotificationHandler : INotificationHandler<CensorIma
         this.scopeFactory = scopeFactory;
     }
     public Task Handle(CensorImageResponse result, CancellationToken cancellationToken) {
-        _logger.LogInformation("Running performance data notification handler!");
+        _logger.LogTrace("Running performance data notification handler!");
         if (result?.CensoringMetadata != null && result?.ImageResult?.Session != null && result.ImageResult.Results.Any()) {
             try {
                 using var scope = scopeFactory.CreateScope();
-                _logger.LogInformation($"Saving performance data from session ('{result.RequestId}') to cache!");
+                _logger.LogDebug($"Saving performance data from session ('{result.RequestId}') to cache!");
                 using var db = scope.ServiceProvider.GetRequiredService<IPerformanceDataService>();
                 db.AddRecord(new PerformanceRecord(result));
                 // var records = db.GetCollection<PerformanceRecord>("requests");

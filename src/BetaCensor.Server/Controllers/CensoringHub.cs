@@ -49,7 +49,7 @@ public class CensoringHub : Hub<ICensorServiceClient> {
         try {
             var requestIds = request.Requests ?? new List<string>();
             if (requestIds.Any()) {
-                _logger.LogTrace("Cancelling requests: " + string.Join(',', requestIds));
+                _logger.LogInformation("Cancelling requests: " + string.Join(',', requestIds));
             }
             if (_validator != null) {
                 _validator.CancelRequests(requestIds);

@@ -33,7 +33,8 @@ namespace BetaCensor.Workers
                 return false;
             }
             return true;
-            } catch {
+            } catch (Exception e) {
+                _logger.LogWarning(e, "Error encountered checking queue item state");
                 return true;
             }
 
