@@ -48,6 +48,7 @@ There are some features from Beta Safety that Beta Censoring doesn't include, ei
 
   - GPU Hardware acceleration
   - Domain-based statistics (not currently planned)
+  - GIF Censoring support
 
 #### GPU Acceleration
 
@@ -56,3 +57,7 @@ There's nothing preventing Beta Censoring from supporting GPU acceleration! The 
 #### Domain-based statistics
 
 While I am working on a statistics API (to match the existing Performance API), there is no plan for the API to include per-domain information. Storing the origin domains of all client requests turns Beta Censoring into a non-editable, real-time source of data on a user's browsing habits, something I don't feel entirely comfortable with it being. If this does get added, it will be up to clients if they want to provide a domain or not.
+
+#### GIF and Video Support
+
+Beta Censoring does not support censoring GIFs or videos. If you request a GIF to be censored, the server will censor the first frame and return it as a static image. As it stands, the NudeNet model is just nowhere near fast enough to support animations or videos with a vaguely acceptable user experience. Based on my current testing numbers, a 10-second low-resolution low-framerate GIF would take around 5 minutes to be censored. Hypothetically, a high-framerate 720p video just 15 seconds long would take almost an hour. As such, Beta Censoring chooses to only support static images.

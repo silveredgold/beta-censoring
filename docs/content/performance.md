@@ -41,6 +41,10 @@ If you're seeing significant performance degradation with large images, raise an
 
 Some of the features exposed by Beta Censoring are *experimental* features that we have included for those who want to use them but may impact performance.
 
+#### Optimization mode
+
+As covered in the [Configuration guide](./configuration.md), Beta Censoring supports different optimization modes. As of the time of writing, this largely controls whether requested images are pre-processed by a body detection model to isolate only the parts of the image that contain people to be censored. This (ab)uses the [Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting) project's model to try and reduce the amount of work the vastly slower NudeNet model has to do.
+
 #### Facial Feature Detection
 
 Facial feature detection uses its own model and middleware to identify specific facial features when faces are detected. Note that facial feature detection will only be run when clients specifically request `EYES_F` or `MOUTH_F` censoring in the request. Including these will enable feature detection which can noticeably increase censoring time.

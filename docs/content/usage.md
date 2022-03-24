@@ -16,3 +16,15 @@ There is a simple web interface available to check on the status of a running Be
 At this time, the only _known_ Beta Censoring client is **[Beta Protection](https://silveredgold.github.io/beta-protection/#/)**, the browser extension for live censoring images while you browse.
 
 Beta Censoring can accept any client though, and if you're interested in integrating it with other tools or building your own client, the [developer documentation](./developers.md) includes more details.
+
+## Known Issues
+
+The best place to look for known issues with Beta Censoring is the [GitHub issues](https://github.com/silveredgold/beta-censoring/issues). Any more far-reaching/long-term issues are summarised below.
+
+##### GIF support
+
+Beta Censoring (by design) doesn't support censoring non-static images (i.e. no GIFs or videos). That being said, the logic for detecting them isn't perfect so it will sometimes get tripped up on them and either fail or just censor the first frame. This is being worked on.
+
+##### Request Cancelling
+
+Clients can ask the server to cancel outstanding requests. This should mean the server will just skip those requests and not bother censoring them. For reasons still being investigated, this sometimes fails and the server will spend a heap of time censoring images that the client no longer wants. This is still under investigation.

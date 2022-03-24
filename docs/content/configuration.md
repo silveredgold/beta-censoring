@@ -238,7 +238,7 @@ Increasing the worker count will **dramatically** increase the load on your PC w
 
 ### Optimization Mode
 
-Beta Censoring includes a bunch of built-in optimization behaviour to try and keep performance acceptable. The defaults should be a reasonably mix of speed to accuracy, but you can also tell Beta Censoring to either be more relaxed (slower, but more accurate) or more aggressive (faster, but less consistent).
+Beta Censoring includes a bunch of built-in optimization behaviour to try and keep performance acceptable. The defaults should be a reasonable balance of speed to accuracy, but you can also tell Beta Censoring to either be more relaxed (slower, but more accurate) or more aggressive (faster, but less consistent).
 
 In your configuration you can set the optimization mode to one of the following:
 
@@ -302,4 +302,4 @@ Server:
 
 This would result in all images being scaled down to 720p before being handed to the AI. You can specify either a set of `<WIDTH>x<HEIGHT>` dimensions (as above) or just a single number for both.
 
-> Note that censoring (and therefore the final cesnored image) will always be on the full-size image.
+> Note that censoring (and therefore the final censored image) will always be on the full-size image.
