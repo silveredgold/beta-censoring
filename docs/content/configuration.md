@@ -236,6 +236,41 @@ It may be tempting to dramatically increase the `WorkerCount` setting to get mor
 
 Increasing the worker count will **dramatically** increase the load on your PC while censoring. Additionally, adding more workers actually has the potential to _slow down_ censoring, especially if you add more workers than your PC can reasonably run at once. A reasonable rule of thumb is to use half the number of cores your CPU has. If you're okay with things *really* slowing down during censoring, you can try going as high as the number of cores, but it's **strongly recommended** to not go above this number.
 
+### Optimization Mode
+
+Beta Censoring includes a bunch of built-in optimization behaviour to try and keep performance acceptable. The defaults should be a reasonably mix of speed to accuracy, but you can also tell Beta Censoring to either be more relaxed (slower, but more accurate) or more aggressive (faster, but less consistent).
+
+In your configuration you can set the optimization mode to one of the following:
+
+- `None`: Skips most optimizations. Slower, but more consistent and accurate
+- `Normal` (default): Adds some pre-processing to slightly improve AI performance without sacrificing too much accuracy
+- `Aggressive`: Applies heavier pre-processing and inference to significantly increase the AI performance but with a much higher risk of missed or inaccurate matches.
+
+In your configuration, you can set the optimization mode to one of the above modes if you want to override the default.
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+Server:
+  OptimizationMode: Aggressive 
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "Server": {
+        "OptimizationMode": "Aggressive"
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
 ### Scaling Configuration
 
 There is one additional configuration item you might be interested in: image rescaling. When Beta Censoring actually runs an image through the AI, it will (if necessary) scale the image down a little to speed things up. By default, though, it will only scale anything larger than 1080p. This default should result in reasonably accurate matching from the AI with reasonable performance. 

@@ -48,8 +48,10 @@ public static class ServerConfigurationExtensions {
                 //ignored
             }
         }
-        return p => {
-            return new ImageSharpHandler(maxWidth, maxHeight);
+        return serverOptions.OptimizationMode switch 
+        {
+            OptimizationMode.None => p => new ImageSharpHandler(maxWidth, maxHeight),
+            _ => p => new BodyAreaImageHandler(new ImageSharpHandler(maxWidth, maxHeight), serverOptions.OptimizationMode),
         };
     }
 
