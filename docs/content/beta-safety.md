@@ -6,7 +6,7 @@ If you're a current Beta Safety user, your first thought on seeing this was prob
 
 For many Beta Safety users, your current experience is probably fine, and if that's the case then feel free to stick with it! Beta Safety and Beta Censoring each have their strengths and weaknesses, so feel free to make your own decision.
 
-> The points discussed below (except where it says otherwise) are generally referring to the "backend" part of Beta Safety, not specifically the Chrome extension. If you're interested in a comparison of the extension, see [this page](https://silveredgold.github.io/beta-protection/#/guide/introduction#how-is-this-different-from-beta-safety) from the Beta Protection docs.
+> The points discussed below (except where it says otherwise) are generally referring to the "backend" part of Beta Safety, not specifically the Chrome extension. If you're interested in a comparison of the extension, see [this page](https://silveredgold.github.io/beta-protection/guide/beta-safety.html) from the Beta Protection docs.
 
 ## Open Source and Extensible
 

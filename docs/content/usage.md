@@ -13,7 +13,7 @@ There is a simple web interface available to check on the status of a running Be
 
 ## Clients
 
-At this time, the only _known_ Beta Censoring client is **[Beta Protection](https://silveredgold.github.io/beta-protection/#/)**, the browser extension for live censoring images while you browse.
+At this time, the only _known_ Beta Censoring client is **[Beta Protection](https://silveredgold.github.io/beta-protection/)**, the browser extension for live censoring images while you browse.
 
 Beta Censoring can accept any client though, and if you're interested in integrating it with other tools or building your own client, the [developer documentation](./developers.md) includes more details.
 
