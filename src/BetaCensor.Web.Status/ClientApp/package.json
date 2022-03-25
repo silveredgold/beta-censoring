@@ -19,9 +19,9 @@
     },
     "homepage": "https://github.com/silveredgold/beta-censoring#readme",
     "devDependencies": {
-        "@silveredgold/beta-censor-client": "^0.0.0-alpha9",
-        "@silveredgold/beta-shared": "^0.0.1-alpha26",
-        "@silveredgold/beta-shared-components": "^0.0.1-alpha22",
+        "@silveredgold/beta-censor-client": "^0.0.0-alpha11",
+        "@silveredgold/beta-shared": "^0.0.1-alpha30",
+        "@silveredgold/beta-shared-components": "^0.0.1-alpha26",
         "@types/luxon": "^2.3.1",
         "@vicons/ionicons5": "^0.12.0",
         "@vicons/utils": "^0.1.4",
