@@ -16,7 +16,14 @@ public class ClientResponseNotificationHandler : INotificationHandler<CensorImag
     public async Task Handle(CensorImageResponse result, CancellationToken cancellationToken) {
         if (result?.RequestId != null && !string.IsNullOrWhiteSpace(result.RequestId)) {
             if (result.CensoredImage != null) {
-                await _hubContext.Clients.Group(result.RequestId).HandleCensoredImage(result);
+                _logger.LogDebug($"Processing response for {result.RequestId}: ({result.CensoredImage?.ImageContents?.Length ?? -1}b/{result.CensoredImage?.MimeType})");
+                try
+                {
+                    await _hubContext.Clients.Group(result.RequestId).HandleCensoredImage(result);
+                } catch (Exception e)
+                {
+                    _logger.LogError(e, "Error when writing client response");
+                }
             }
             else {
                 await _hubContext.Clients.Group(result.RequestId).OnCensoringError(result.RequestId, result!.Error);

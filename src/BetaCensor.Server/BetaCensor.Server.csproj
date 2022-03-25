@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.45" />
-    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.45" />
+    <PackageReference Include="CensorCore.ModelLoader" Version="0.0.0-preview.0.46" />
+    <PackageReference Include="CensorCore.Web" Version="0.0.0-preview.0.46" />
     <PackageReference Include="ConfigurEngine" Version="0.2.0" />
     <PackageReference Include="LiteDB" Version="5.0.11" />
     <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
