@@ -67,14 +67,16 @@ if (serverOpts.EnableSignalR) {
         o.EnableDetailedErrors = true;
         o.KeepAliveInterval = TimeSpan.FromSeconds(10);
         o.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
-    }).AddJsonProtocol(options =>
+    })
+    .AddJsonProtocol(options =>
     {
         options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
         options.PayloadSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.PayloadSerializerOptions.WriteIndented = true;
-    }).AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
+    })
+    .AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
     {
-        o.MaximumReceiveMessageSize = 4194304;
+        o.MaximumReceiveMessageSize = 16777216;
     });
 }
 
@@ -122,7 +124,7 @@ app.UseRouting();
 app.UseEndpoints(e =>
 {
     if (serverOpts.EnableSignalR) {
-        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 4194304);
+        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 16777216);
     }
 });
 // app.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live");
