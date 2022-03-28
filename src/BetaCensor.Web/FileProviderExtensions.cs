@@ -8,23 +8,6 @@ namespace BetaCensor.Web;
 
 public static class FileProviderExtensions {
 
-    internal static IFileProvider? GetProvider(this string path, bool allowNesting = false) {
-        if (File.Exists(path) && Path.GetExtension(path) == ".zip") {
-            throw new NotImplementedException();
-        }
-        else if (Directory.Exists(path)) {
-            if (!Path.IsPathFullyQualified(path)) {
-                path = Path.GetFullPath(path);
-            }
-            var provider = new PhysicalFileProvider(path, Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.Sensitive);
-            return allowNesting ? new NestedFilesProvider(provider) : provider;
-        }
-        else if (File.Exists(path) && Path.GetExtension(path) == ".dll") {
-            return new EmbeddedFileProvider(System.Reflection.Assembly.LoadFile(path));
-        }
-        return null;
-    }
-
     internal static IEnumerable<IFileInfo> GetAllFiles(this IFileProvider provider) {
         var results = provider.GetDirectoryContents(string.Empty);
         var files = results.Where(r => !r.IsDirectory).ToList();

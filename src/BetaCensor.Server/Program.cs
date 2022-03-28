@@ -104,9 +104,9 @@ builder.Services.AddWorkers<DispatchNotificationService<CensorImageResponse>>(1)
 
 builder.Services.AddHostedService<DiscoveryService>();
 
-var stickerOpts = builder.Configuration.GetSection("Stickers");
-var captionsOpts = builder.Configuration.GetSection("Captions");
-builder.Services.AddStickerService(stickerOpts, captionsOpts, builder.Environment);
+// var stickerOpts = builder.Configuration.GetSection("Stickers");
+// var captionsOpts = builder.Configuration.GetSection("Captions");
+builder.Services.AddStickerService(builder.Environment);
 
 builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
 builder.Services.AddSingleton<CensorCore.Censoring.GlobalCensorOptions>(ServerConfigurationExtensions.BuildCensorOptions);
