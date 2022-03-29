@@ -132,4 +132,5 @@ app.UseEndpoints(e =>
 app.MapControllers();
 app.UseWebSockets();
 app.UseStatusPages(app.Environment);
+app.UseStickerProvider();
 app.Run();

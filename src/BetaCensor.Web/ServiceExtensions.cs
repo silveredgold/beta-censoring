@@ -2,16 +2,25 @@ using BetaCensor.Core;
 using BetaCensor.Web;
 using BetaCensor.Web.Components;
 using BetaCensor.Web.Providers;
-using CensorCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection {
     public static class ServiceExtensions {
+        public static WebApplication UseStickerProvider(this WebApplication app) {
+            var logger = app.Services.GetService<ILogger<IStickerProvider>>();
+            var timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+            logger?.LogDebug($"Loading sticker provider...");
+            app.Services.GetRequiredService<IStickerProvider>();
+            logger?.LogInformation($"Loaded sticker provider in {timer.Elapsed.TotalSeconds}s!");
+            return app;
+        }
 
-        public static Func<IServiceProvider, StickerProvider> BuildStickerService(IWebHostEnvironment env, string sectionName, string captionSectionName) {
+        public static Func<IServiceProvider, IStickerProvider> BuildStickerService(IWebHostEnvironment env, string sectionName, string captionSectionName) {
 
             return (p =>
             {
@@ -49,8 +58,9 @@ namespace Microsoft.Extensions.DependencyInjection {
                 if (File.Exists(defaultCaptionPath)) {
                     captionOpts.FilePaths.Add(defaultCaptionPath);
                 }
-                var service = new StickerProvider(opts, captionOpts, providers);
-                return service;
+                return opts.StartupMode == StartupMode.Fast
+                    ? new StickerProvider(opts, captionOpts, providers)
+                    : new StickerDbProvider(opts, captionOpts, providers);
             });
         }
 
@@ -69,48 +79,11 @@ namespace Microsoft.Extensions.DependencyInjection {
             {
                 services.AddSingleton(typeof(IStoreComponent), defaultComponent);
             }
-            services.AddSingleton<StickerProvider>(BuildStickerService(env, stickerSection, captionSection));
+            services.AddSingleton<IStickerProvider>(BuildStickerService(env, stickerSection, captionSection));
             // services.AddSingleton<IAssetStore>(BuildStickerService(env, stickerSection, captionSection));
-            services.AddSingleton<CensorCore.IAssetStore, StickerProvider>(p => p.GetRequiredService<StickerProvider>());
+            services.AddSingleton<CensorCore.IAssetStore, IStickerProvider>(p => p.GetRequiredService<IStickerProvider>());
             
             return services;
         }
-
-        // public static IServiceCollection AddStickerService(this IServiceCollection services, IConfigurationSection stickerSection, IConfigurationSection captionSection, IWebHostEnvironment env) {
-        //     var opts = stickerSection.Get<StickerOptions>() ?? new StickerOptions();
-        //     var captionOpts = captionSection.Get<CaptionOptions>() ?? new CaptionOptions();
-        //     var providers = new List<IFileProvider>();
-        //     // var defaultStorePath = Path.Join(env.ContentRootPath, "stickers");
-        //     var defaultCaptionPath = Path.Join(env.ContentRootPath, "captions.txt");
-        //     // if (Directory.Exists(defaultStorePath)) {
-        //     //     var defaultProvider = defaultStorePath.GetProvider(true);
-        //     //     if (defaultProvider != null) {
-        //     //         providers.Add(defaultProvider);
-        //     //     }
-        //     // }
-        //     if (opts.LocalStores.Any()) {
-        //         var storeProviders = opts.LocalStores.Select(p => p.GetProvider(true)).Where(p => p is not null);
-        //         if (storeProviders != null && storeProviders.Any()) {
-        //             providers.AddRange(storeProviders!);
-        //         }
-        //     }
-        //     if (opts.Paths.Any()) {
-        //         foreach (var pathSet in opts.Paths) {
-        //             foreach (var path in pathSet.Value) {
-        //                 var provider = path.GetProvider();
-        //                 if (provider is not null) {
-        //                     providers.Add(new CategoryProvider(pathSet.Key, provider));
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     if (File.Exists(defaultCaptionPath)) {
-        //         captionOpts.FilePaths.Add(defaultCaptionPath);
-        //     }
-        //     var service = new StickerProvider(opts, captionOpts, providers);
-        //     services.AddSingleton<StickerProvider>(service);
-        //     services.AddSingleton<CensorCore.IAssetStore, StickerProvider>(p => p.GetRequiredService<StickerProvider>());
-        //     return services;
-        // }
     }
 }

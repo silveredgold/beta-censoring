@@ -4,7 +4,7 @@ using Microsoft.Extensions.FileProviders;
 
 namespace BetaCensor.Web;
 #pragma warning disable 1998
-public class StickerProvider : CensorCore.IAssetStore {
+public class StickerProvider : IStickerProvider {
     private readonly StickerOptions? _options;
     private readonly List<string> _captions;
     private readonly List<CategoryProvider> _categoryProviders;
@@ -27,7 +27,8 @@ public class StickerProvider : CensorCore.IAssetStore {
                 list.AddRange(options.FilePaths.Where(f => File.Exists(f) && Path.GetExtension(f) == ".txt").SelectMany(f => File.ReadAllLines(f)));
             }
             return list.Any(s => !string.IsNullOrWhiteSpace(s)) ? list : null;
-        } catch {
+        }
+        catch {
             return null;
         }
     }
@@ -44,22 +45,26 @@ public class StickerProvider : CensorCore.IAssetStore {
     public async Task<IEnumerable<RawImageData>> GetImages(string imageType, List<string>? category) {
         if (imageType == CensorCore.Censoring.KnownAssetTypes.Stickers && category is not null && category.Any()) {
             var results = new List<IFileInfo?>();
-            foreach (var item in category) {
-                var catResults = _provider.GetDirectoryContents(item).ToList();
-                var nestedFiles = new List<IFileInfo>();
-                foreach (var dir in catResults.Where(s => s.IsDirectory && s.Exists))
-                {
-                    nestedFiles.AddRange(FileProviderExtensions.DirSearch(_provider, dir));
-                }
-                var nest = nestedFiles.ToList();
-                results.AddRange(catResults.Where(f => !f.IsDirectory && f.Exists).Concat(nestedFiles));
-            }
-            var candidates = results.Where(fi => fi is not null && fi.Exists);
-            return candidates.Select(c =>new RawImageData(ReadFile(c!)));
+            return GetImageData(category);
         }
         else {
             return Array.Empty<RawImageData>();
         }
+    }
+
+    private IEnumerable<RawImageData> GetImageData(List<string> categories) {
+        var results = new List<IFileInfo?>();
+        foreach (var item in categories) {
+            var catResults = _provider.GetDirectoryContents(item).ToList();
+            var nestedFiles = new List<IFileInfo>();
+            foreach (var dir in catResults.Where(s => s.IsDirectory && s.Exists)) {
+                nestedFiles.AddRange(FileProviderExtensions.DirSearch(_provider, dir));
+            }
+            var nest = nestedFiles.ToList();
+            results.AddRange(catResults.Where(f => !f.IsDirectory && f.Exists).Concat(nestedFiles));
+        }
+        var candidates = results.Where(fi => fi is not null && fi.Exists);
+        return candidates.Select(c => new RawImageData(ReadFile(c!)));
     }
 
     private byte[] ReadFile(IFileInfo fi) {
@@ -77,10 +82,26 @@ public class StickerProvider : CensorCore.IAssetStore {
         return lowerBound <= diff && diff <= upperBound;
     }
 
-    public async Task<IEnumerable<string>> GetCategories() {
+    public IEnumerable<string> GetCategories() {
         var providedCats = _categoryProviders.Select(p => p.Category).ToList();
         var availableCats = _provider.GetDirectoryContents(string.Empty).Where(f => f.IsDirectory && f.Exists).Select(f => f.Name).ToList();
         return providedCats.Concat(availableCats).Distinct();
+    }
+
+    public Dictionary<string, IEnumerable<RawImageData>> GetStickers() {
+        var providedCats = _categoryProviders.Select(p => p.Category).ToList();
+        var availableCats = _provider.GetDirectoryContents(string.Empty).Where(f => f.IsDirectory && f.Exists).Select(f => f.Name).ToList();
+        var cats = providedCats.Concat(availableCats).Distinct();
+        var dict = new Dictionary<string, IEnumerable<RawImageData>>();
+        foreach (var cat in cats) {
+            var images = GetImageData(new List<string> {cat});
+            dict.Add(cat, images.Select(i =>
+            {
+                var ident = SixLabors.ImageSharp.Image.Identify(i.RawData, out var format);
+                return new RawImageData(i.RawData, format.DefaultMimeType);
+            }));
+        }
+        return dict;
     }
 
     private static List<string> _defaultCaptions = new() {

@@ -19,14 +19,6 @@ namespace BetaCensor.Web.Status.Pages {
         public void OnGet() {
         }
 
-        public async Task<IActionResult> OnGetAssets([FromServices] BetaCensor.Web.StickerProvider stickerProvider) {
-            var stickers = await stickerProvider.GetCategories();
-            return new JsonResult(new
-            {
-                stickerCategories = stickers
-            });
-        }
-
         public IActionResult OnGetCurrentConfiguration([FromServices] IConfiguration config) {
             var section = config.GetSection("Stickers");
             StickerOptions? opts = null;
@@ -63,29 +55,25 @@ namespace BetaCensor.Web.Status.Pages {
             return BadRequest();
         }
 
-        public async Task<IActionResult> OnGetAvailableStickerSummary([FromServices]StickerProvider provider) {
-            var cats = await provider.GetCategories();
+        public IActionResult OnGetAvailableStickerSummary([FromServices]IStickerProvider provider) {
+            var results = provider.GetStickers();
             var dict = new Dictionary<string, int>();
-            foreach (var cat in cats)
+            foreach (var cat in results)
             {
-                var images = await provider.GetImages(CensorCore.Censoring.KnownAssetTypes.Stickers, new List<string> {cat});
-                dict.Add(cat, images.Count());
+                dict.Add(cat.Key, cat.Value.Count());
             }
             return new JsonResult(dict);
         }
 
-        public async Task<IActionResult> OnGetAvailableStickers([FromServices]StickerProvider provider) {
-            var cats = await provider.GetCategories();
-            var dict = new Dictionary<string, IEnumerable<KeyValuePair<string, byte[]>>>();
-            foreach (var cat in cats)
-            {
-                var images = await provider.GetImages(CensorCore.Censoring.KnownAssetTypes.Stickers, new List<string> {cat});
-                dict.Add(cat, images.Select(i => {
-                    var ident = SixLabors.ImageSharp.Image.Identify(i.RawData, out var format);
-                    return new KeyValuePair<string, byte[]>(format.DefaultMimeType, i.RawData);
-                }));
-            }
+        public IActionResult OnGetAvailableStickers([FromServices]IStickerProvider provider) {
+            var results = provider.GetStickers();
+            var dict = results.ToDictionary(k => k.Key, v => v.Value.Select(id => new KeyValuePair<string, byte[]>(id.MimeType ?? GetMimeType(id.RawData), id.RawData)));
             return new JsonResult(dict);
+        }
+
+        private string GetMimeType(byte[] data) {
+            var ident = SixLabors.ImageSharp.Image.Identify(data, out var format);
+            return format.DefaultMimeType;
         }
 
         

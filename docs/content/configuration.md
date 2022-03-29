@@ -35,11 +35,13 @@ C:/path/to/my/sticker/store
 
 #### Default Store
 
-Beta Censoring looks for a default store at the `stickers/` path from the server folder. That is, if there's a folder called `stickers` in the same place as `BetaCensor.Server.exe`, Beta Censoring will automatically load any subfolders in that folder as categories of stickers.
+Beta Censoring looks for a default store at the `stickers/` path from the server folder. That is, if there's a folder called `stickers` in the same place as `BetaCensor.Server.exe`, Beta Censoring will automatically load any subfolders in that folder as categories of stickers. 
+
+Likewise, it will also load any ZIP files with the `.betapkg` extension or with names ending in `-stickers.zip`. That is, if you have a ZIP file named `my-beta-stickers.zip` in the same folder as `BetaCensor.Server.exe`, Beta Censoring will automatically load any folders in that ZIP file as categories of stickers.
 
 #### Configuration
 
-You can also add sticker stores to your configuration like below, and it would make a `Professional` and `Chastity` category available.
+You can also add sticker stores to your configuration like below, and it would make a `Professional` and `Chastity` category available (using the sample layout from above).
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>
@@ -101,6 +103,42 @@ Stickers:
 Any images in any of the folders provided for a given category (`Discreet` and `Chastity` in the example above) will be merged together and used any time a client requests sticker censoring with those categories enabled.
 
 You also don't need to worry about images being the exact right dimension! Beta Censoring will check the available images and find one that's aspect ratio is _close enough_ to the censoring it's being used for. While we recommend sticking mostly to square-ish images, you don't need to worry too much about the exact dimensions.
+
+### Startup Mode
+
+By default, Beta Censoring will run in its "Normal" mode which tries to speed up sticker loading by pre-loading your available stickers into memory. This meaks it much faster to apply sticker censoring at the cost of increased memory usage and startup speed. In our ever-present goal for customization, this is configurable. You can use your configuration file to set the sticker startup into either "Hybrid" or "Fast" mode.
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+Stickers:
+  StartupMode: Hybrid
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "Stickers": {
+        "StartupMode": "Hybrid"
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+Your options are summarized below:
+
+- **`Normal`** (default): This mode takes longer to start up and increases memory consumption, but makes censoring (when using stickers) much faster. Adding/removing stickers requires restarting the server.
+- **`Hybrid`**: This mode still pre-loads stickers, but does so a little bit faster. This mode is a little faster to start up at the cost of slightly slower censoring (when using stickers). Adding/removing stickers requires restarting the server.
+- **`Fast`**: This mode does _not_ pre-load stickers at all. This means it is the fastest to start up and uses significantly less memory, but is noticeably slower to censor (when using stickers). Adding/removing stickers does not require restarting the server.
+
+I recommend leaving the server in Normal mode unless you are really struggling for memory and are willing to accept a penalty in censoring time when using stickers.
+
 
 ## Captions Configuration
 
