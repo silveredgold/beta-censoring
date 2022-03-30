@@ -11,6 +11,10 @@ The server will look for configuration in a handful of locations when it starts 
 
 You can use either JSON or YAML configuration files, which should be named `config.json` or `config.yml` respectively.
 
+### Current Configuration
+
+If you're already running your Beta Censoring server, you can actually navigate to the [`/_server/options/build`](http://beta-censoring.local:2382/_server/options/build) URL on the server to generate a configuration file to (roughly) match your current server's configuration.
+
 ## Sticker Configuration
 
 You can enable stickers and control their use using the `Stickers` section of the config file. You can either use the `config.yml`/`config.json` or use a separate `stickers.yml`/`stickers.json`. You can configure two kinds of locations for stickers: sticker stores and separate paths.
