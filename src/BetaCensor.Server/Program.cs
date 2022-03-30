@@ -34,13 +34,13 @@ if (model == null) throw new InvalidDataException("Failed to retrieve AI model! 
 builder.Services.AddCensoring(model);
 builder.Services.AddSingleton<CensorCore.Censoring.ICensoringMiddleware, BetaCensor.Core.ObfuscationMiddleware>();
 
-var serverOpts = builder.Configuration.GetSection("Server").Get<ServerOptions>();
+var serverOpts = builder.Configuration.GetServerOptions();
 serverOpts ??= new ServerOptions();
 
 builder.Services.AddSingleton<IImageHandler>(ServerConfigurationExtensions.BuildImageHandler(serverOpts));
 
 // builder.Services.AddSpaStaticFiles(options => {options.RootPath = "wwwroot";});
-var mvc = builder.Services.AddControllers();
+var mvc = builder.Services.AddControllers(mvc => mvc.AddYamlFormatter()).AddJsonOptions(json => json.JsonSerializerOptions.ConfigureJsonOptions());
 if (serverOpts.EnableRest) {
     Console.WriteLine("Enabling REST interface!");
     mvc.AddApplicationPart(typeof(CensorCore.Web.CensoringController).Assembly);
@@ -68,12 +68,7 @@ if (serverOpts.EnableSignalR) {
         o.KeepAliveInterval = TimeSpan.FromSeconds(10);
         o.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
     })
-    .AddJsonProtocol(options =>
-    {
-        options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.PayloadSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-        options.PayloadSerializerOptions.WriteIndented = true;
-    })
+    .AddJsonProtocol(options => options.PayloadSerializerOptions.ConfigureJsonOptions())
     .AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
     {
         o.MaximumReceiveMessageSize = 16777216;
@@ -87,12 +82,7 @@ if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSp
     });
 }
 
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.SerializerOptions.PropertyNameCaseInsensitive = true;
-    options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.WriteIndented = true;
-});
+builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ConfigureJsonOptions());
 
 builder.Services.AddQueues<CensorImageRequest, CensorImageResponse>();
 builder.Services.AddDefaultManagedRequestQueue();

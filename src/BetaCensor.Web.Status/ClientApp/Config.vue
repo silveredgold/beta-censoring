@@ -5,6 +5,7 @@ import { themeOverrides } from './util'
 import ServerHeader from './components/ServerHeader.vue';
 import StickerSummary from './components/StickerSummary.vue';
 import StickerPreviews from './components/StickerPreviews.vue';
+import ConfigWizard from './components/ConfigWizard.vue';
 
 const osTheme = useOsTheme();
 const theme = computed(() => (osTheme.value === 'dark' ? darkTheme : null))
@@ -31,6 +32,9 @@ const props = withDefaults(defineProps<{ msg?: string }>(), { msg: 'Testing' });
                         </n-grid-item>
                     </n-grid>
                 </n-tab-pane>
+                <!-- <n-tab-pane name="server-config" tab="Server Config">
+                    <ConfigWizard />
+                </n-tab-pane> -->
             </n-tabs>
         </n-loading-bar-provider>
         <n-global-style />

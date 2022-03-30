@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BetaCensor.Web.Performance;
 using CensorCore;
 using CensorCore.Censoring;
@@ -77,5 +78,19 @@ public static class ServerConfigurationExtensions {
                 }
             });
         });
+    }
+
+    public static ServerOptions? GetServerOptions(this IConfiguration config) {
+        var section = config.GetSection("Server");
+        return section.Exists() ? section.Get<ServerOptions>() : null;
+    }
+
+    public static JsonSerializerOptions ConfigureJsonOptions(this JsonSerializerOptions? options) {
+        options ??= new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        options.PropertyNameCaseInsensitive = true;
+        options.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        options.WriteIndented = true;
+        options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        return options;
     }
 }

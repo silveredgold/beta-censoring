@@ -80,7 +80,7 @@ public class DiscoveryService : IHostedService {
 
     private bool IsApiEnabled() {
         try {
-            var conf = configuration.GetSection("Server").Get<ServerOptions>() ?? new ServerOptions();
+            var conf = configuration.GetServerOptions() ?? new ServerOptions();
             return conf.EnableRest || conf.EnableSignalR;
         }
         catch {

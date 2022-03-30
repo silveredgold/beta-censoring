@@ -15,24 +15,6 @@ namespace BetaCensor.Web.Status.Pages {
             this.env = env;
         }
 
-        
-        public void OnGet() {
-        }
-
-        public IActionResult OnGetCurrentConfiguration([FromServices] IConfiguration config) {
-            var section = config.GetSection("Stickers");
-            StickerOptions? opts = null;
-            if (section.Exists()) {
-                opts = section.Get<StickerOptions>();
-            }
-            return new JsonResult(new
-            {
-                stickerOptions = opts
-            });
-        }
-
-        
-
         public IActionResult OnPostValidatePath(PathValidationRequest request) {
             if (!string.IsNullOrWhiteSpace(request.LocalPath)) {
                 DirectoryInfo? dirInfo = null;
