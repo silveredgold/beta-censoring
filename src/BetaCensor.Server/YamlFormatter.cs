@@ -32,7 +32,7 @@ namespace BetaCensor.Server
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
             var serializer = new SerializerBuilder()
-                .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                .WithNamingConvention(new PascalCaseNamingConvention())
                 .Build();
             _serializer = serializer;
         }
