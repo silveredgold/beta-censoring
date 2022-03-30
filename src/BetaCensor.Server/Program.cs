@@ -34,13 +34,13 @@ if (model == null) throw new InvalidDataException("Failed to retrieve AI model! 
 builder.Services.AddCensoring(model);
 builder.Services.AddSingleton<CensorCore.Censoring.ICensoringMiddleware, BetaCensor.Core.ObfuscationMiddleware>();
 
-var serverOpts = builder.Configuration.GetSection("Server").Get<ServerOptions>();
+var serverOpts = builder.Configuration.GetServerOptions();
 serverOpts ??= new ServerOptions();
 
 builder.Services.AddSingleton<IImageHandler>(ServerConfigurationExtensions.BuildImageHandler(serverOpts));
 
 // builder.Services.AddSpaStaticFiles(options => {options.RootPath = "wwwroot";});
-var mvc = builder.Services.AddControllers();
+var mvc = builder.Services.AddControllers(mvc => mvc.AddYamlFormatter()).AddJsonOptions(json => json.JsonSerializerOptions.ConfigureJsonOptions());
 if (serverOpts.EnableRest) {
     Console.WriteLine("Enabling REST interface!");
     mvc.AddApplicationPart(typeof(CensorCore.Web.CensoringController).Assembly);
@@ -67,14 +67,11 @@ if (serverOpts.EnableSignalR) {
         o.EnableDetailedErrors = true;
         o.KeepAliveInterval = TimeSpan.FromSeconds(10);
         o.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
-    }).AddJsonProtocol(options =>
+    })
+    .AddJsonProtocol(options => options.PayloadSerializerOptions.ConfigureJsonOptions())
+    .AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
     {
-        options.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.PayloadSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-        options.PayloadSerializerOptions.WriteIndented = true;
-    }).AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
-    {
-        o.MaximumReceiveMessageSize = 4194304;
+        o.MaximumReceiveMessageSize = 16777216;
     });
 }
 
@@ -85,12 +82,7 @@ if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSp
     });
 }
 
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.SerializerOptions.PropertyNameCaseInsensitive = true;
-    options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.WriteIndented = true;
-});
+builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ConfigureJsonOptions());
 
 builder.Services.AddQueues<CensorImageRequest, CensorImageResponse>();
 builder.Services.AddDefaultManagedRequestQueue();
@@ -102,9 +94,9 @@ builder.Services.AddWorkers<DispatchNotificationService<CensorImageResponse>>(1)
 
 builder.Services.AddHostedService<DiscoveryService>();
 
-var stickerOpts = builder.Configuration.GetSection("Stickers");
-var captionsOpts = builder.Configuration.GetSection("Captions");
-builder.Services.AddStickerService(stickerOpts, captionsOpts, builder.Environment);
+// var stickerOpts = builder.Configuration.GetSection("Stickers");
+// var captionsOpts = builder.Configuration.GetSection("Captions");
+builder.Services.AddStickerService(builder.Environment);
 
 builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
 builder.Services.AddSingleton<CensorCore.Censoring.GlobalCensorOptions>(ServerConfigurationExtensions.BuildCensorOptions);
@@ -122,7 +114,7 @@ app.UseRouting();
 app.UseEndpoints(e =>
 {
     if (serverOpts.EnableSignalR) {
-        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 4194304);
+        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 16777216);
     }
 });
 // app.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live");
@@ -130,4 +122,5 @@ app.UseEndpoints(e =>
 app.MapControllers();
 app.UseWebSockets();
 app.UseStatusPages(app.Environment);
+app.UseStickerProvider();
 app.Run();

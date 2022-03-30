@@ -12,13 +12,13 @@
                 </template>
                 <template #extra>
                     <n-space>
-                        <n-popover trigger="hover" placement="bottom">
+                        <n-popover trigger="hover" placement="bottom-end">
                             <template #trigger>
-                                <n-button @click="refresh">
-                                    <n-icon size="30" :component="Refresh" />
+                                <n-button @click="openConfig">
+                                    <n-icon size="30" :component="Open" />
                                 </n-button>
                             </template>
-                            Refresh
+                            Stickers and Configuration
                         </n-popover>
                     </n-space>
                 </template>
@@ -81,7 +81,7 @@
 </template>
 <script setup lang="ts">
 import { NPageHeader, NGrid, NGi, NAvatar, NStatistic, NButton, NSpace, NIcon, NPopover, NThing } from "naive-ui";
-import { Settings, Refresh, Alert, Help } from "@vicons/ionicons5";
+import { Open, Refresh, Alert, Help } from "@vicons/ionicons5";
 import { computed, toRefs, ref, Ref, onMounted } from "vue";
 import { ConnectionStatus } from "@silveredgold/beta-shared-components";
 import type { HostConfigurator } from '@silveredgold/beta-shared-components'
@@ -131,5 +131,9 @@ const refresh = async () => {
     var json = await resp.json();
     console.log(JSON.stringify(json));
     requestCount.value = json.requests;
+}
+
+const openConfig = async () => {
+    window.open('/config', '_blank');
 }
 </script>

@@ -36,14 +36,4 @@ public class StatusModel : PageModel {
             components = components
         });
     }
-
-    
-
-    public async Task<IActionResult> OnGetAssets([FromServices] Web.StickerProvider stickerProvider) {
-        var stickers = await stickerProvider.GetCategories();
-        return new JsonResult(new
-        {
-            stickerCategories = stickers
-        });
-    }
 }

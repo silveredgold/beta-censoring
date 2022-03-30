@@ -4,9 +4,12 @@ using Microsoft.Extensions.Primitives;
 namespace BetaCensor.Web.Providers {
     public class NestedFilesProvider : IFileProvider {
         private readonly IFileProvider _provider;
+        private readonly Func<string, IFileInfo, string> _join;
 
-        public NestedFilesProvider(IFileProvider provider) {
+        public NestedFilesProvider(IFileProvider provider, Func<string, IFileInfo, string>? customJoiner = null) {
             _provider = provider;
+            customJoiner ??= (subpath, dir) => Path.Join(subpath, dir.Name);
+            _join = customJoiner;
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath) {
@@ -15,7 +18,7 @@ namespace BetaCensor.Web.Providers {
                 var files = results.Where(r => !r.IsDirectory).ToList();
                 var dirs = results.Where(r => r.IsDirectory);
                 foreach (var dir in dirs) {
-                    files.AddRange(_provider.DirSearch(Path.Join(subpath, dir.Name)));
+                    files.AddRange(_provider.DirSearch(_join(subpath, dir)));
                 }
                 return new VirtualDirectory(files);
             }

@@ -32,11 +32,10 @@ const themeVars = useThemeVars();
 const stickers: Ref<string[]> = ref([])
 
 onMounted(() => {
-    const headers = useRazorRequest();
-    fetch('/?handler=assets', { headers }).then(resp => {
+    fetch('/assets/categories?type=stickers').then(resp => {
         console.log(resp);
         resp.json().then(json => {
-            stickers.value = json.stickerCategories
+            stickers.value = json
         });
     });
 });
