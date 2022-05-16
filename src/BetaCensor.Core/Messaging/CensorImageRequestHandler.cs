@@ -20,13 +20,13 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
     public async Task<CensorImageResponse> Handle(CensorImageRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Processing censoring request: {request.RequestId}");
-        var imageUrl = request.ImageDataUrl ?? request.ImageUrl;
-        if (!string.IsNullOrWhiteSpace(imageUrl)) {
+        // var imageUrl = request.ImageDataUrl ?? request.ImageUrl;
+        if (!string.IsNullOrWhiteSpace(request.ImageDataUrl) || !string.IsNullOrWhiteSpace(request.ImageUrl)) {
             var timer = new System.Diagnostics.Stopwatch();
             try {
                 using var scope = _scopeFactory.CreateScope();
                 var matchOptions = scope.ServiceProvider.GetService<MatchOptions>();
-                var result = await this._ai.RunModel(imageUrl, matchOptions);
+                var result = await RunModel(request, matchOptions);
                 if (result != null) {
                     timer.Start();
                     IResultParser? parser = null;
@@ -51,5 +51,22 @@ public class CensorImageRequestHandler : IRequestHandler<CensorImageRequest, Cen
         } else {
             return MessageResponse.GetError<CensorImageResponse>(request.RequestId, "Could not determine image URL from request!");
         }
+    }
+
+    private async Task<ImageResult?> RunModel(CensorImageRequest request, MatchOptions options) {
+        ImageResult? result = null;
+        if (string.IsNullOrWhiteSpace(request.ImageDataUrl)) {
+            result = await this._ai.RunModel(request.ImageUrl!, options);
+        } else if (string.IsNullOrWhiteSpace(request.ImageUrl)) {
+            result = await this._ai.RunModel(request.ImageDataUrl, options);
+        } else {
+            //we have both, so we can try them both
+            try {
+                result = await this._ai.RunModel(request.ImageDataUrl!, options);
+            } catch {
+                result = await this._ai.RunModel(request.ImageUrl!, options);
+            }
+        }
+        return result;
     }
 }

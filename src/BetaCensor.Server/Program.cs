@@ -114,7 +114,10 @@ app.UseRouting();
 app.UseEndpoints(e =>
 {
     if (serverOpts.EnableSignalR) {
-        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => conf.ApplicationMaxBufferSize = 16777216);
+        e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => {
+            conf.ApplicationMaxBufferSize = 16777216;
+            conf.TransportMaxBufferSize = 167777216;
+        });
     }
 });
 // app.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live");
