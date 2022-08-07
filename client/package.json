@@ -1,0 +1,35 @@
+{
+  "name": "@silveredgold/beta-censor-client",
+  "version": "0.0.0-alpha16",
+  "description": "Client library for accessing a running instance of Beta Censoring",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --project ./tsconfig.json",
+    "build:docs": "typedoc",
+    "dist": "npm run build && copyfiles ./.*rc ./package.json ./dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silveredgold/beta-censoring.git"
+  },
+  "author": "silveredgold",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/silveredgold/beta-censoring/issues"
+  },
+  "homepage": "https://github.com/silveredgold/beta-censoring",
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@microsoft/signalr": "^6.0.2",
+    "@silveredgold/beta-shared": "^0.0.1-alpha26",
+    "@silveredgold/ste-events": "^2.1.16-alpha4",
+    "@silveredgold/ste-simple-events": "^2.1.16-alpha4",
+    "missionlog": "^1.8.3"
+  }
+}

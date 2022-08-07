@@ -404,7 +404,4 @@ tools/
 .vscode/settings.json
 *.db
 
-## temporarily omitting client code
-client/
-.github/workflows/client.yml
 *.betapkg

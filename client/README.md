@@ -1,0 +1,3 @@
+This is the JS+SignalR client library for connecting any `ICensorBackend`-based client (i.e. anything using `@silveredgold/beta-shared`) to the local censoring server. Note that since we're using the SignalR endpoints (and a few other specific parts), this won't work as a generic CensorCore client (which `beta-shared` already includes).
+
+Due to the absolutely sorry state of `fetch` polyfills/ponyfills on NPM, this package is targeted at DOM environments, but Node v16+ shuold be compatible as well with `--experimental-fetch`.
