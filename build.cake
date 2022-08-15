@@ -7,7 +7,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var runtimeSpec = Argument<string>("publish-runtimes", "win-x64;osx-x64;linux-x64");
+var runtimeSpec = Argument<string>("publish-runtimes", "win-x64;osx.10.14-x64;osx.10.14-arm64;linux-x64");
 var singleFile = Argument<bool>("single-file", true);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,11 +157,11 @@ Task("Publish-Runtime")
 			OutputDirectory = runtimeDir,
 			PublishSingleFile = singleFile,
 			PublishTrimmed = true,
-			IncludeNativeLibrariesForSelfExtract = singleFile,
+			IncludeNativeLibrariesForSelfExtract = singleFile && !runtime.Contains("osx"),
 			ArgumentCustomization = args => args.Append($"/p:Version={packageVersion}").Append("/p:AssemblyVersion=1.0.0.0")
 		};
 		DotNetPublish(projPath, settings);
-        if (singleFile) {
+        if (singleFile && !runtime.Contains("osx")) {
             CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.lib") || fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.pdb") || fsi.Path.FullPath.EndsWith("web.config"));
         }
 		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb") || fsi.Path.FullPath.EndsWith("onnxruntime.lib"));
