@@ -10,15 +10,27 @@ Download the latest release from the [GitHub Releases](https://github.com/silver
 
 ## Running
 
-Open the folder you extracted the app to, then just double-click the executable for your platform to start the server.
+### Windows
 
-> That will be `BetaCensor.Server.exe` on Windows, and `BetaCensor.Server` on Linux or macOS
+Open the folder you extracted the app to, then just double-click the executable (`BetaCensor.Server.exe`) to start the server. You may get alerts from SmartScreen or Windows Defender that they can't verify the app. That's expected since I'm not willing to pay the hundreds of dollars required for a code signing certificate to make those go away.
 
 A console window should appear and after a few seconds, you're ready to rock, the server is now running. You can point your clients (like Beta Protection) to `http://localhost:2382` and get censoring.
 
+### Linux
+
+Open your terminal of choice and `cd` to the directory you unpacked the server to. The permissions sometimes get broken during build, so run `chmod 755 BetaCensor.Server` then `./BetaCensor.Server`. The server will unpack itself and then you're ready to rock, the server is now running. You can point your clients (like Beta Protection) to `http://localhost:2382` and get censoring.
+
+### macOS
+
+Apple doesn't think you know how to operate your own computer, so this shit is about to get complex.
+
+Drag the folder you just unpacked onto the Terminal icon to open a terminal in the current directory. Run the following command to mark the server as executable: `chmod +x ./BetaCensor.Server`. Now, run the server with `./BetaCensor.Server`. After a few seconds, the server will **appear** to be running, but you also will have received some warnings about this app being unrecognised. This is expected as I'm not willing to pay Apple for the certificate they are expecting. You can close the current terminal window while we fix this.
+
+Open Preferences > Security & Privacy and look for a note at the bottom of the page about how `BetaCensor.Server` was stopped from running. Click Open Anyway to allow it. Now, repeat the process as before: drag the folder on to Terminal, run `./BetaCensor.Server` and after a few seconds, you're ready to rock, the server is now running. You can point your clients (like Beta Protection) to `http://localhost:2382` and get censoring.
+
 ## Known Issues
 
-If you're on Windows, you may get alerts from SmartScreen or Windows Defender that they can't verify the app. That's expected since I'm not willing to pay the hundreds of dollars required for a code signing certificate to make those go away. If you're worried about the security of the server, you can always submit your downloaded files to VirusTotal, or just check the sources yourself [on GitHub](https://github.com/silveredgold/beta-censoring).
+On both Windows and macOS, you may get alerts from your operating system that they can't verify the app. That's expected since I'm not willing to pay the hundreds of dollars required for a code signing certificate to make those go away (in the case of macOS, that requires paying Apple a recurring subscription fee). If you're worried about the security of the server, you can always submit your downloaded files to VirusTotal, or just check the sources yourself [on GitHub](https://github.com/silveredgold/beta-censoring).
 
 ## Alternate Methods
 
