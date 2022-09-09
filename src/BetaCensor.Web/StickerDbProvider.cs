@@ -2,17 +2,20 @@ using BetaCensor.Web.Providers;
 using CensorCore;
 using LiteDB;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 
 namespace BetaCensor.Web;
 
 public class StickerDbProvider : IStickerProvider {
     private readonly StickerOptions? _options;
+    private readonly ILogger<StickerDbProvider> _logger;
     private readonly LiteDatabase _db;
     private readonly List<string> _captions;
     private readonly StartupMode _mode;
 
-    public StickerDbProvider(StickerOptions? options, CaptionOptions? captions, IEnumerable<IFileProvider> providers) {
+    public StickerDbProvider(StickerOptions? options, CaptionOptions? captions, IEnumerable<IFileProvider> providers, ILogger<StickerDbProvider> logger) {
         _options = options;
+        _logger = logger;
         _db = new LiteDatabase(":memory:");
         _captions = LoadCaptions(captions) ?? _defaultCaptions;
         _mode = _options?.StartupMode ?? StartupMode.Normal;
@@ -120,23 +123,28 @@ public class StickerDbProvider : IStickerProvider {
 
         foreach (var category in images) {
             foreach (var image in category.Value) {
-                using var read = image.CreateReadStream();
-                var record = new StickerRecord(category.Key, image.Name);
-                if (_mode == StartupMode.Hybrid) {
-                    var dbCatFile = _db.FileStorage.Upload($"$/{category.Key}/{image.Name}-{image.LastModified.Millisecond}", image.Name, read);
-                }
-                else {
-                    var img = SixLabors.ImageSharp.Image.Identify(read, out var format);
-                    decimal srcRatio = img.Width / img.Height;
-                    var meta = new BsonDocument();
-                    meta["aspectRatio"] = srcRatio;
-                    meta["width"] = img.Width;
-                    meta["height"] = img.Height;
-                    meta["format"] = format.DefaultMimeType;
-                    meta["extension"] = format.FileExtensions.First();
-                    read.Dispose();
-                    using var readFile = image.CreateReadStream();
-                    var dbCatFile = _db.FileStorage.Upload($"$/{category.Key}/{image.Name}-{image.LastModified.Second}", image.Name, readFile, meta);
+                try {
+                    using var read = image.CreateReadStream();
+                    var record = new StickerRecord(category.Key, image.Name);
+                    if (_mode == StartupMode.Hybrid) {
+                        var dbCatFile = _db.FileStorage.Upload($"$/{category.Key}/{image.Name}-{image.LastModified.Millisecond}", image.Name, read);
+                    }
+                    else {
+                        var img = SixLabors.ImageSharp.Image.Identify(read, out var format);
+                        decimal srcRatio = img.Width / img.Height;
+                        var meta = new BsonDocument();
+                        meta["aspectRatio"] = srcRatio;
+                        meta["width"] = img.Width;
+                        meta["height"] = img.Height;
+                        meta["format"] = format.DefaultMimeType;
+                        meta["extension"] = format.FileExtensions.First();
+                        read.Dispose();
+                        using var readFile = image.CreateReadStream();
+                        var dbCatFile = _db.FileStorage.Upload($"$/{category.Key}/{image.Name}-{image.LastModified.Second}", image.Name, readFile, meta);
+                    }
+                } catch {
+                    _logger.LogWarning($"Failed to load file into stickers DB: {image.Name} ({(image.PhysicalPath ?? "unknown")}");
+                    //ignored
                 }
             }
         }

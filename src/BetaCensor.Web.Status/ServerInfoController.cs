@@ -22,7 +22,14 @@ public class InfoController : ControllerBase {
                 version = version
             });
         }
-        catch {
+        catch (Exception e) {
+            var innermostException = e.GetBaseException().GetBaseException();
+            if (innermostException is EntryPointNotFoundException) {
+                return new StatusCodeResult(StatusCodes.Status412PreconditionFailed);
+            }
+            if (innermostException is DllNotFoundException) {
+                return new StatusCodeResult(StatusCodes.Status424FailedDependency);
+            }
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

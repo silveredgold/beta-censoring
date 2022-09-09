@@ -164,7 +164,7 @@ Task("Publish-Runtime")
         if (singleFile && !runtime.Contains("osx")) {
             CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.lib") || fsi.Path.FullPath.EndsWith("onnxruntime_providers_shared.pdb") || fsi.Path.FullPath.EndsWith("web.config"));
         }
-		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb") || fsi.Path.FullPath.EndsWith("onnxruntime.lib"));
+		CleanDirectory(runtimeDir, fsi => fsi.Path.FullPath.EndsWith("onnxruntime.pdb"));
 		CreateDirectory($"{artifacts}archive");
 		Zip(runtimeDir, $"{artifacts}archive/betacensor-server-{runtime}.zip");
 	}

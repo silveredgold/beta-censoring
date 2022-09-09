@@ -27,7 +27,15 @@
                         <n-statistic label="Server Version" :value="serverVersion" />
                     </n-gi>
                     <n-gi>
-                        <n-statistic label="CensorCore Version" :value="coreVersion" />
+                        <n-statistic v-if="coreLoaded" label="CensorCore Version" :value="coreVersion" />
+                        <n-thing v-if="!coreLoaded" title="CensorCore Version">
+                            <n-popover :scrollable="true" width="trigger">
+                                    <template #trigger>
+                                        Could not load AI runtime!
+                                    </template>
+                                    <n-text>The server could not load the AI runtime. This usually indicates a corrupt installation or that your PC does not have the <a href="https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank">VC++ runtime</a> installed.</n-text>
+                            </n-popover>
+                        </n-thing>
                     </n-gi>
                     <n-gi>
                         <n-statistic label="Pending Requests" :value="requestCount">
@@ -80,7 +88,7 @@
     </n-grid>
 </template>
 <script setup lang="ts">
-import { NPageHeader, NGrid, NGi, NAvatar, NStatistic, NButton, NSpace, NIcon, NPopover, NThing } from "naive-ui";
+import { NPageHeader, NGrid, NGi, NAvatar, NStatistic, NButton, NSpace, NIcon, NPopover, NThing, NText } from "naive-ui";
 import { Open, Refresh, Alert, Help } from "@vicons/ionicons5";
 import { computed, toRefs, ref, Ref, onMounted } from "vue";
 import { ConnectionStatus } from "@silveredgold/beta-shared-components";
@@ -96,7 +104,9 @@ const getHost: HostConfigurator = {
 
 const props = withDefaults(defineProps<{title?: string}>(), {title: "Server Status Panel"});
 
-const coreVersion = ref("v0.0.0");
+const coreVersion = ref("unknown");
+const coreError = ref(0);
+const coreLoaded = computed(() => coreError.value === 0 || coreError.value === 200);
 const serverVersion = ref("v0.0.0");
 const requestCount = ref(0);
 const hostname = ref("");
@@ -111,6 +121,7 @@ onMounted(() => {
     requestHeaders.value = headers;
     fetch('/censoring/info', { headers }).then(resp => {
         console.log(resp);
+        coreError.value = resp.status || 0;
         resp.json().then(json => {
             coreVersion.value = json.version;
         })

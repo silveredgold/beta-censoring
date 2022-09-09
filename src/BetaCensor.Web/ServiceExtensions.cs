@@ -60,7 +60,7 @@ namespace Microsoft.Extensions.DependencyInjection {
                 }
                 return opts.StartupMode == StartupMode.Fast
                     ? new StickerProvider(opts, captionOpts, providers)
-                    : new StickerDbProvider(opts, captionOpts, providers);
+                    : new StickerDbProvider(opts, captionOpts, providers, p.GetRequiredService<ILogger<StickerDbProvider>>());
             });
         }
 
