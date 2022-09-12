@@ -45,7 +45,12 @@ public class DispatchWorkerService<TRequest, TResponse> : BackgroundService wher
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred executing task work item.");
+                Exception innermostException = ex.GetBaseException().GetBaseException();
+                if (innermostException is DllNotFoundException || innermostException is EntryPointNotFoundException) {
+                    _logger.LogError(innermostException, "Beta Censoring could not load the AI runtime or one of its dependencies! Check that you have the VC++ runtime installed, and that you have not removed any files from the server package.");
+                } else {
+                    _logger.LogError(ex, "Error occurred executing task work item.");
+                }
             }
         }
     }
