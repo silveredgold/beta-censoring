@@ -29,6 +29,8 @@ public static class ServerConfigurationExtensions {
             defaults.AllowTransformers = matchOpts.AllowTransformers ?? true;
             defaults.RelativeCensorScale = matchOpts.RelativeCensorScale ?? defaults.RelativeCensorScale;
             defaults.PaddingScale = matchOpts.PaddingScale ?? defaults.PaddingScale;
+            defaults.ClassStrength = matchOpts.ClassStrength ?? new Dictionary<string, float>();
+            defaults.ForcePixelBackground = matchOpts.ForcePixelBackground ?? false;
         }
         return defaults;
     }
