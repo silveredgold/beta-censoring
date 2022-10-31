@@ -47,3 +47,12 @@ See the available versions [at the repo on Quay.io](https://quay.io/repository/b
 ### System service
 
 If you want to integrate running Beta Censoring Server with your system, you can! It supports both Systemd and Windows Services out of the box. Set it up to run with either method and the server will correctly integrate with startup/shutdown as well as logging to make it easier to manage.
+
+#### Example Windows Service installation
+
+Here's an example of setting the server up as a Windows Service. Change the path to match, and (optionally) adjust to suit your needs.
+
+```powershell
+$rootDir = "X:\Beta\betacensor-server-win-x64"
+New-Service -Name beta-censoring -BinaryPathName "$rootDir/BetaCensor.Server.exe --contentRoot \"$rootDir\"" -DisplayName "Beta Censoring Server" -StartupType Automatic
+```

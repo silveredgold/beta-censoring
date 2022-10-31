@@ -8,5 +8,6 @@ namespace BetaCensor.Server
         public string? SocketPath {get;set;}
         public string? ImageDimensions {get;set;} = null;
         public CensorCore.OptimizationMode OptimizationMode {get;set;} = CensorCore.OptimizationMode.Normal;
+        public bool EnableLargeMessages = true;
     }
 }

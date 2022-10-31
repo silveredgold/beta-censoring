@@ -71,7 +71,8 @@ if (serverOpts.EnableSignalR) {
     .AddJsonProtocol(options => options.PayloadSerializerOptions.ConfigureJsonOptions())
     .AddHubOptions<BetaCensor.Server.Controllers.CensoringHub>(o =>
     {
-        o.MaximumReceiveMessageSize = 16777216;
+        o.MaximumParallelInvocationsPerClient = 8;
+        o.MaximumReceiveMessageSize = serverOpts.EnableLargeMessages ? null : 33554432;
     });
 }
 
@@ -115,8 +116,8 @@ app.UseEndpoints(e =>
 {
     if (serverOpts.EnableSignalR) {
         e.MapHub<BetaCensor.Server.Controllers.CensoringHub>("/live", conf => {
-            conf.ApplicationMaxBufferSize = 16777216;
-            conf.TransportMaxBufferSize = 167777216;
+            conf.ApplicationMaxBufferSize = 33554432;
+            conf.TransportMaxBufferSize = 33554432;
         });
     }
 });

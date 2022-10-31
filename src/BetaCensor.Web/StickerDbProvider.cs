@@ -54,8 +54,13 @@ public class StickerDbProvider : IStickerProvider {
                     return true;
                 }
                 return false;
-            }).Random();
-            return Task.FromResult<RawImageData?>(new RawImageData(ReadFile(target), target.MimeType));
+            });
+            if (target.Any()) {
+                var file = target.Random();
+                return Task.FromResult<RawImageData?>(new RawImageData(ReadFile(file), file.MimeType));
+            } else {
+                return Task.FromResult<RawImageData?>(null);
+            }
         }
         else {
             throw new NotImplementedException();
