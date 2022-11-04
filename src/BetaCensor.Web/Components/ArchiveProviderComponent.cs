@@ -11,6 +11,14 @@ public class ArchiveProviderComponent : IStoreComponent {
         var localPackages = Directory.GetFiles(contentRoot, "*.betapkg").Where(f => File.Exists(f));
         var localZips = Directory.GetFiles(contentRoot, "*-stickers.zip").Where(f => File.Exists(f));
         localPackages = localPackages.Concat(localZips);
+        var defaultStorePath = Path.Join(contentRoot, "stickers");
+        if (Directory.Exists(defaultStorePath)) {
+            if (!Path.IsPathFullyQualified(defaultStorePath)) {
+                defaultStorePath = Path.GetFullPath(defaultStorePath);
+            }
+            var storePackages = Directory.GetFiles(defaultStorePath, "*.betapkg").Where(File.Exists);
+            localPackages = localPackages.Concat(storePackages);
+        }
         if (localPackages.Any()) {
             var providers = localPackages.Select(lp => new _ZipFileProvider(lp, convertBackslashesToSlashes: true)).ToArray();
             return new NestedFilesProvider(new CompositeFileProvider(providers), (s, dir) => string.Join('/', new[] {s, dir.Name}));

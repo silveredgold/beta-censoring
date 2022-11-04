@@ -11,10 +11,6 @@ The server will look for configuration in a handful of locations when it starts 
 
 You can use either JSON or YAML configuration files, which should be named `config.json` or `config.yml` respectively.
 
-### Current Configuration
-
-If you're already running your Beta Censoring server, you can actually navigate to the [`/_server/options/build`](http://beta-censoring.local:2382/_server/options/build) URL on the server to generate a configuration file to (roughly) match your current server's configuration.
-
 ## Sticker Configuration
 
 You can enable stickers and control their use using the `Stickers` section of the config file. You can either use the `config.yml`/`config.json` or use a separate `stickers.yml`/`stickers.json`. You can configure two kinds of locations for stickers: sticker stores and separate paths.
@@ -108,6 +104,19 @@ Any images in any of the folders provided for a given category (`Discreet` and `
 
 You also don't need to worry about images being the exact right dimension! Beta Censoring will check the available images and find one that's aspect ratio is _close enough_ to the censoring it's being used for. While we recommend sticking mostly to square-ish images, you don't need to worry too much about the exact dimensions.
 
+### Sticker Packs
+
+You will sometimes find pre-prepared sticker packs. These are special archive files with the `.betapkg` file extension. You can drop these right into the server folder (i.e. where `BetaCensor.Server.exe` is) and the server will load any stickers contained in the pack when it starts.
+
+To get you started, here's a couple of basic sticker packs:
+
+|Pack|Author|Description|Download|
+|:--|:--|:--|:-:|
+|Emoji|`silveredgold`|A simple pack of emojis. Mostly square, with some mosaics for wider matches.|[Download Here](https://static.betaplatform.app/stickers/Emoji.betapkg)|
+|Professional|`finalfrog`|A more "professional" or "corporate" set of stickers with a mix of square and wide stickers.|[Download Here](http://static.betaplatform.app/stickers/Professional.betapkg)|
+|Labels|`silveredgold`|A simple set of censoring-themed stylized text labels in mostly wider shapes, particularly useful if your other stickers are mostly square.|[Download Here](http://static.betaplatform.app/stickers/Labels.betapkg)|
+
+
 ### Startup Mode
 
 By default, Beta Censoring will run in its "Normal" mode which tries to speed up sticker loading by pre-loading your available stickers into memory. This meaks it much faster to apply sticker censoring at the cost of increased memory usage and startup speed. In our ever-present goal for customization, this is configurable. You can use your configuration file to set the sticker startup into either "Hybrid" or "Fast" mode.
@@ -148,7 +157,13 @@ I recommend leaving the server in Normal mode unless you are really struggling f
 
 > Beta Censoring includes a default set of captions so you only need to do this if you want to change them.
 
-Captions work similarly to stickers to configure, but with a `Captions` configuration section that looks a little different:
+### Simple Method
+
+The simplest method if you just want to change which captions are shown by default, you can add a `captions.txt` file in the same folder as the server, with one caption per line. These will *replace* the default captions.
+
+### Advanced Method
+
+If you want a bit more control, or have a more complex set-up in mind, you can configure captions from the configuration file. Captions work similarly to stickers to configure, but with a `Captions` configuration section that looks a little different:
 
 <CodeGroup>
   <CodeGroupItem title="YAML" active>
@@ -180,7 +195,7 @@ Captions:
 
 In short, you can include the captions directly in the configuration file (as a list in the `Captions` property) or include any number of text files where each line of the text file is one caption (as a list of paths in the `FilePaths` property).
 
-While the API supports it, the current default caption provider ignores requested categories
+While the API supports it, the current default caption provider ignores requested categories.
 
 ## Censoring Configuration
 
