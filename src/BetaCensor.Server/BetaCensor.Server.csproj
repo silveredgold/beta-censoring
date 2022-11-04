@@ -25,4 +25,8 @@
     <ProjectReference Include="..\BetaCensor.Workers\BetaCensor.Workers.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
+    <Content Update="appsettings*.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>

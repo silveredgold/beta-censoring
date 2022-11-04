@@ -23,6 +23,12 @@ builder.Configuration
 builder.Host.UseSystemd();
 builder.Host.UseWindowsService();
 
+//TODO: while effective (and clean), this is kind of a bad hack
+// we should add a runtimeSettings.json, use the csproj to include it as an embedded resource
+// then use AddJsonStream to pull it back out. Then it's still a JSON config like appSettings
+// but we don't have to include a loose JSON file.
+builder.Logging.AddFilter("Microsoft.AspNetCore", level => level > LogLevel.Warning);
+
 // Add services to the container.
 
 var loader = new ModelLoaderBuilder()
