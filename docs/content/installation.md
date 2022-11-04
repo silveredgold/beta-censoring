@@ -8,6 +8,12 @@ The server is currently built for 64-bit versions of Windows, Linux and macOS.
 
 Download the latest release from the [GitHub Releases](https://github.com/silveredgold/beta-censoring/releases). Find the latest release and download the ZIP file for your platform. Unpack it somewhere convenient.
 
+## Updating
+
+If you are already running Beta Censoring, updating is generally as easy as download the new version and unpacking it over the top of the old version (make sure you close/stop the old version first). If you encounter problems with this method, unpack the new version to an empty folder, make sure it runs, then (if you have any) copy any stickers, captions or configuration files from your old install to the new location. 
+
+> You can always check the current version you are using from the Web UI (usually at [`http://localhost:2382`](http://localhost:2382/))
+
 ## Running
 
 ### Windows
