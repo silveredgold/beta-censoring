@@ -113,8 +113,8 @@ To get you started, here's a couple of basic sticker packs:
 |Pack|Author|Description|Download|
 |:--|:--|:--|:-:|
 |Emoji|`silveredgold`|A simple pack of emojis. Mostly square, with some mosaics for wider matches.|[Download Here](https://static.betaplatform.app/stickers/Emoji.betapkg)|
-|Professional|`finalfrog`|A more "professional" or "corporate" set of stickers with a mix of square and wide stickers.|[Download Here](http://static.betaplatform.app/stickers/Professional.betapkg)|
-|Labels|`silveredgold`|A simple set of censoring-themed stylized text labels in mostly wider shapes, particularly useful if your other stickers are mostly square.|[Download Here](http://static.betaplatform.app/stickers/Labels.betapkg)|
+|Professional|`finalfrog`|A more "professional" or "corporate" set of stickers with a mix of square and wide stickers.|[Download Here](https://static.betaplatform.app/stickers/Professional.betapkg)|
+|Labels|`silveredgold`|A simple set of censoring-themed stylized text labels in mostly wider shapes, particularly useful if your other stickers are mostly square.|[Download Here](https://static.betaplatform.app/stickers/Labels.betapkg)|
 
 
 ### Startup Mode
