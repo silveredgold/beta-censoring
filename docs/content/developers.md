@@ -39,6 +39,25 @@ The REST API is provided directly by the underlying [CensorCore](https://github.
 
 Note that both options will block and only respond once censoring is complete! If you're after an asynchronous alternative, SignalR is your best bet.
 
+Here's an example REST call:  
+**URL:** `http://yourserver:yourport/censoring/censorImage`  
+**Method:** `POST`  
+**Headers:** `Content-Type: application/json`  
+**Body:**
+```json
+{
+  "ImageUrl":"http://url/of/your/image.png",
+  "CensorOptions": {
+    "COVERED_BREAST_F": {
+      "Level":8,
+      "CensorType":"blur"
+    }
+  }
+}
+```
+`CensorOptions` inside the JSON payload can take a list of options. The option name `COVERED_BREAST_F` can be any of the class names as defined by the underlying model (https://github.com/notAI-tech/NudeNet), but also (at least) `MOUTH_F` and `EYES_F` which are the class names of the face detection model being used alongside the nudity one. `CensorType` can be `blur`, `pixel`, and `blackbars`. `Level` is an integer for the intensity of the censoring effect, which can be from `0` to `20`.
+
+
 ### Socket
 
 There is initial support for accessing the REST API (and _theoretically_ the SignalR one) over a Unix socket, but that is disabled by default. Add a socket path to the `Server.SocketPath` key in your configuration and restart the server to enable the socket interface.
