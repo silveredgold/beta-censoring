@@ -60,5 +60,9 @@ Here's an example of setting the server up as a Windows Service. Change the path
 
 ```powershell
 $rootDir = "X:\Beta\betacensor-server-win-x64"
-New-Service -Name beta-censoring -BinaryPathName "$rootDir/BetaCensor.Server.exe --contentRoot \"$rootDir\"" -DisplayName "Beta Censoring Server" -StartupType Automatic
+New-Service -Name beta-censoring -BinaryPathName "$rootDir/BetaCensor.Server.exe --contentRoot ""$rootDir""" -DisplayName "Beta Censoring Server" -StartupType Automatic
 ```
+
+That will install the service. You can then either start it immediately with `Start-Service -name beta-censoring`, or it will automatically start the next time you restart.
+
+> Note that you will need to run PowerShell as Administrator to install new services.
