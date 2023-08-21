@@ -1,3 +1,4 @@
+using BetaCensor.Caching;
 using BetaCensor.Core.Messaging;
 using BetaCensor.Server;
 using BetaCensor.Server.Discovery;
@@ -58,6 +59,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddStatusPages<ServerInfoService>(builder.Environment);
 
 builder.Services.AddMediatR(
+    //this needs to be first to override the "normal" handler
+    typeof(BetaCensor.Caching.CachingOptions), 
     typeof(Program), 
     typeof(AIService), 
     typeof(BetaCensor.Core.Messaging.CensorImageRequest), 
@@ -107,6 +110,9 @@ builder.Services.AddStickerService(builder.Environment);
 
 builder.Services.AddScoped<MatchOptions>(ServerConfigurationExtensions.BuildMatchOptions);
 builder.Services.AddSingleton<CensorCore.Censoring.GlobalCensorOptions>(ServerConfigurationExtensions.BuildCensorOptions);
+builder.Services.AddSingleton<CachingOptions>(ServerConfigurationExtensions.BuildCachingOptions);
+
+builder.Services.EnableCaching();
 
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BetaCensor.Caching;
 using BetaCensor.Web.Performance;
 using CensorCore;
 using CensorCore.Censoring;
@@ -31,6 +32,17 @@ public static class ServerConfigurationExtensions {
             defaults.PaddingScale = matchOpts.PaddingScale ?? defaults.PaddingScale;
             defaults.ClassStrength = matchOpts.ClassStrength ?? new Dictionary<string, float>();
             defaults.ForcePixelBackground = matchOpts.ForcePixelBackground ?? false;
+        }
+        return defaults;
+    }
+
+    internal static CachingOptions BuildCachingOptions(this IServiceProvider provider) {
+        var config = provider.GetRequiredService<IConfiguration>();
+        var section = config.GetSection("Caching");
+        var defaults = new CachingOptions();
+        if (section != null && section.Get<CachingOptions>() is var cacheOpts && cacheOpts is not null) {
+            defaults.EnableCensoringCaching = cacheOpts.EnableCensoringCaching;
+            defaults.EnableMatchCaching = cacheOpts.EnableMatchCaching;
         }
         return defaults;
     }
@@ -85,6 +97,11 @@ public static class ServerConfigurationExtensions {
     public static ServerOptions? GetServerOptions(this IConfiguration config) {
         var section = config.GetSection("Server");
         return section.Exists() ? section.Get<ServerOptions>() : null;
+    }
+
+    public static CachingOptions? GetCachingOptions(this IConfiguration config) {
+        var section = config.GetSection("Caching");
+        return section.Exists() ? section.Get<CachingOptions>() : null;
     }
 
     public static JsonSerializerOptions ConfigureJsonOptions(this JsonSerializerOptions? options) {

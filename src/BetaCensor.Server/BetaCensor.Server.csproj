@@ -23,6 +23,7 @@
     <ProjectReference Include="..\BetaCensor.Web\BetaCensor.Web.csproj" />
     <ProjectReference Include="..\BetaCensor.Web.Status\BetaCensor.Web.Status.csproj" />
     <ProjectReference Include="..\BetaCensor.Workers\BetaCensor.Workers.csproj" />
+    <ProjectReference Include="..\BetaCensor.Caching\BetaCensor.Caching.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">

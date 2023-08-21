@@ -39,6 +39,12 @@ As you'd expect, the larger an image the harder it is to both detect matches and
 
 If you're seeing significant performance degradation with large images, raise an issue on GitHub and we will look into methods to improve this.
 
+### Caching
+
+If caching is enabled, this will noticeably speed up censoring when the same image might be requested multiple times, but at the cost of memory usage. The AI/results cache will speed things up if you're seeing slowdowns from the AI inference section of a request and will have a smaller effect on memory usage. Conversely, enabling the censoring cache will noticeably speed up the censoring part of a request, but will noticeably increase memory usage in kind.
+
+Check the [configuration guide](./configuration#caching-configuration) for details on enabling/disabling the caches.
+
 ### Experimental Features
 
 Some of the features exposed by Beta Censoring are *experimental* features that we have included for those who want to use them but may impact performance.

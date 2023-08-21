@@ -360,3 +360,38 @@ Server:
 This would result in all images being scaled down to 720p before being handed to the AI. You can specify either a set of `<WIDTH>x<HEIGHT>` dimensions (as above) or just a single number for both.
 
 > Note that censoring (and therefore the final censored image) will always be on the full-size image.
+
+## Caching Configuration
+
+Beta Censoring from v0.1.0 onwards includes support for caching results from the AI and censoring process. This means that if you request the same image to be censored, the backend can just grab the results from the cache and return them straight away rather than running the image through the AI and censoring processes again.
+
+Caching is split into two parts: the AI cache (aka the results cache) and the censoring cache. The AI cache just caches the matches that get returned from the AI model (i.e. what body parts are where), while the censoring cache will cache the entire censored image. You can individually toggle these caches so that you can have the AI results cached but still get images newly censored each time (great for stickers and captions users) or enable the censoring cache as well for the fastest possible performance.
+
+Note that enabling either cache will increase the server's memory usage, but this is especially noticeable for the censoring cache which will hold every image you have censored in the last 15 minutes in memory, which can use a lot of memory if you browse a lot of images.
+
+To enable/disable caching, use the separate `Caching` section of the configuration file:
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+Caching:
+  EnableMatchCaching: true
+  EnableCensoringCaching: false
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "Caching": {
+        "EnableMatchCaching": true,
+        "EnableCensoringCaching": false
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
