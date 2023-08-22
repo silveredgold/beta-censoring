@@ -11,6 +11,8 @@ The server will look for configuration in a handful of locations when it starts 
 
 You can use either JSON or YAML configuration files, which should be named `config.json` or `config.yml` respectively.
 
+> While we strongly recommend you manually build your own configuration file with only the parts you need, you can see an example of (almost) all the configuration options available to the server in <a :href="$withBase('/config_example.yml')">this example configuration</a>.
+
 ## Sticker Configuration
 
 You can enable stickers and control their use using the `Stickers` section of the config file. You can either use the `config.yml`/`config.json` or use a separate `stickers.yml`/`stickers.json`. You can configure two kinds of locations for stickers: sticker stores and separate paths.
@@ -363,7 +365,7 @@ This would result in all images being scaled down to 720p before being handed to
 
 ## Caching Configuration
 
-Beta Censoring from v0.1.0 onwards includes support for caching results from the AI and censoring process. This means that if you request the same image to be censored, the backend can just grab the results from the cache and return them straight away rather than running the image through the AI and censoring processes again.
+Beta Censoring from v0.0.10 onwards includes support for caching results from the AI and censoring process. This means that if you request the same image to be censored, the backend can just grab the results from the cache and return them straight away rather than running the image through the AI and censoring processes again.
 
 Caching is split into two parts: the AI cache (aka the results cache) and the censoring cache. The AI cache just caches the matches that get returned from the AI model (i.e. what body parts are where), while the censoring cache will cache the entire censored image. You can individually toggle these caches so that you can have the AI results cached but still get images newly censored each time (great for stickers and captions users) or enable the censoring cache as well for the fastest possible performance.
 
@@ -389,6 +391,46 @@ Caching:
     "Caching": {
         "EnableMatchCaching": true,
         "EnableCensoringCaching": false
+    }
+}
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+## Other Configuration
+
+There is also some extra configuration options to tweak the censoring behaviour available in the `CensorOptions` section that let you globally control some parts of the matching/censoring process. Of particular note:
+
+- `RelativeCensorScale`: This will globally scale the size of matches from the AI up or down. A value of `1` means that censoring will only apply to the area indicated by the AI, while (for example) `1.2` will include an area 20% larger in each direction.
+- `PaddingScale`: This can be used to increase/decrease the padding area around matches used by the censoring process. We don't recommend you change this.
+- `ForcePixelBackground`: By default, stickers will be applied on top of a blur effect. Setting this to `true` will instead pixelate the area under the sticker. This effect is necessary as the server has no way of knowing whether or not the sticker is *actually* covering the area that is to be censored, so we blur or pixelate the area *then* apply the sticker on top.
+- `ClassStrength`: This is currently only used by the blur and pixelation censor types, but can be used to increase the strength of those effects for specific classes (i.e body parts). This is *multiplicative* with the censor level requested by the client, so be careful with it.
+
+<CodeGroup>
+  <CodeGroupItem title="YAML" active>
+
+```yaml
+# all values are optional
+CensorOptions:
+  RelativeCensorScale: 1.1
+  ForcePixelBackground: true
+  ClassStrength:
+    FACE_F: 0.9
+```
+
+  </CodeGroupItem>
+
+  <CodeGroupItem title="JSON">
+
+```json
+{
+    "CensorOptions": {
+        "RelativeCensorScale": 1.1,
+        "ForcePixelBackground": true,
+        "ClassStrength": {
+          "EXPOSED_BREAST_F": 1.2
+        }
     }
 }
 ```

@@ -1,0 +1,29 @@
+Stickers:
+  LocalStores: ['C:/path/to/my/sticker/store']
+  Paths:
+    Discreet: ["C:/pictures/discreet-stickers"]
+    Chastity: ["C:/pictures/chastity-stickers", "D:/downloads/stickers"]
+  StartupMode: Normal
+Captions:
+  Captions:
+    - "censored"
+    - "denied"
+  FilePaths:
+    - "D:/captions.txt"
+MatchOptions:
+  MinimumScore: 0.4
+  ClassScores:
+    EXPOSED_FEET: 0.35
+    COVERED_BREAST_F: 0.45
+Server:
+  OptimizationMode: Normal
+  WorkerCount: 2
+  ImageDimensions: "1280x720"
+Caching:
+  EnableMatchCaching: true
+  EnableCensoringCaching: false
+CensorOptions:
+  RelativeCensorScale: 1.0
+  ForcePixelBackground: true
+  ClassStrength:
+    FACE_F: 0.9
