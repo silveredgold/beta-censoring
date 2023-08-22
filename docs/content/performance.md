@@ -11,7 +11,7 @@ Performance for something as complex as Beta Censoring is not an easy topic to d
 
 ### Checking Server Performance
 
-The Beta Censoring server includes a basic web dashbaord to give a rough idea of the performance of the server. To check it, just open your browser and navigate to [`http://beta-censoring.local:2382/`](http://beta-censoring.local:2382/) and you should see a simple status panel to check the details of your server. Click the Performance tab to view a quick summary of performance metrics.
+The Beta Censoring server includes a basic web dashboard to give a rough idea of the performance of the server. To check it, just open your browser and navigate to [`http://beta-censoring.local:2382/`](http://beta-censoring.local:2382/) and you should see a simple status panel to check the details of your server. Click the Performance tab to view a quick summary of performance metrics.
 
 > If that URL doesn't work, try directly navigating to the server URL. For example, that would be [`http://localhost:2382`](http://localhost:2382) on the PC you're running the server on.
 

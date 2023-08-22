@@ -36,17 +36,6 @@ public static class ServerConfigurationExtensions {
         return defaults;
     }
 
-    internal static CachingOptions BuildCachingOptions(this IServiceProvider provider) {
-        var config = provider.GetRequiredService<IConfiguration>();
-        var section = config.GetSection("Caching");
-        var defaults = new CachingOptions();
-        if (section != null && section.Get<CachingOptions>() is var cacheOpts && cacheOpts is not null) {
-            defaults.EnableCensoringCaching = cacheOpts.EnableCensoringCaching;
-            defaults.EnableMatchCaching = cacheOpts.EnableMatchCaching;
-        }
-        return defaults;
-    }
-
     internal static Func<IServiceProvider, IImageHandler> BuildImageHandler(ServerOptions serverOptions) {
         int? maxWidth = null;
         int? maxHeight = null;

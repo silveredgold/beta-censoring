@@ -16,12 +16,12 @@ public class CachedCensorImageRequestHandler : IRequestHandler<CensorImageReques
     private readonly AIService _ai;
     private readonly ICensoringProvider _censor;
     // private readonly MatchOptions? _matchOptions;
-    private readonly ILogger<CensorImageRequestHandler> _logger;
+    private readonly ILogger<CachedCensorImageRequestHandler> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IFusionCacheProvider _cacheProvider;
     private readonly CachingOptions _options;
 
-    public CachedCensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CensorImageRequestHandler> logger, IServiceScopeFactory scopeFactory, IFusionCacheProvider cacheProvider, CachingOptions options)
+    public CachedCensorImageRequestHandler(AIService aiService, ICensoringProvider censoringProvider, ILogger<CachedCensorImageRequestHandler> logger, IServiceScopeFactory scopeFactory, IFusionCacheProvider cacheProvider, CachingOptions options)
     => (_logger, _ai, _censor, _scopeFactory, _cacheProvider, _options) = (logger, aiService, censoringProvider, scopeFactory, cacheProvider, options);
 
     public async Task<CensorImageResponse> Handle(CensorImageRequest request, CancellationToken cancellationToken)
