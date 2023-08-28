@@ -1,4 +1,6 @@
+using BetaCensor.Caching;
 using BetaCensor.Web;
+using CensorCore.Censoring;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetaCensor.Server.Controllers
@@ -9,7 +11,11 @@ namespace BetaCensor.Server.Controllers
     {
         [PreferYamlFilter]
         [HttpGet("options")]
-        public IActionResult GetMatchOptions([FromServices] CensorCore.MatchOptions matchOpts, [FromServices]IConfiguration config) {
+        public IActionResult GetMatchOptions(
+            [FromServices] CensorCore.MatchOptions matchOpts, 
+            [FromServices] GlobalCensorOptions censorOptions, 
+            [FromServices] CachingOptions cachingOptions, 
+            [FromServices] IConfiguration config) {
             var serverConf = config.GetServerOptions();
             var stickerSection = config.GetSection("Stickers");
                 var captionSection = config.GetSection("Captions");
@@ -19,7 +25,9 @@ namespace BetaCensor.Server.Controllers
                 Server = serverConf,
                 MatchOptions = matchOpts,
                 Captions = captionOpts,
-                Stickers = opts
+                Stickers = opts,
+                Caching = cachingOptions,
+                CensorOptions = censorOptions
             });
         }
     }

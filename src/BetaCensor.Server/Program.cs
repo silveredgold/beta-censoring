@@ -20,9 +20,15 @@ builder.Configuration
     .AddConfigFile("config")
     .AddConfigFile("stickers")
     .AddConfigFile("beta-config");
+    
+builder.Configuration
+    .AddEnvironmentVariables("BCS_")
+    .AddCommandLine(args);
 
 builder.Host.UseSystemd();
 builder.Host.UseWindowsService();
+
+builder.WebHost.UseConfiguration(builder.Configuration);
 
 //TODO: while effective (and clean), this is kind of a bad hack
 // we should add a runtimeSettings.json, use the csproj to include it as an embedded resource
