@@ -98,7 +98,7 @@ public class CachedCensorImageRequestHandler : IRequestHandler<CensorImageReques
     private async Task<ImageResult?> RunModel(CensorImageRequest request, MatchOptions options) {
         ImageResult? result = null;
         if (string.IsNullOrWhiteSpace(request.ImageDataUrl)) {
-            result = await this._ai.RunModel(request.ImageUrl!, options);
+            result = await this._ai.RunModel(System.Web.HttpUtility.UrlDecode(request.ImageUrl!), options);
         } else if (string.IsNullOrWhiteSpace(request.ImageUrl)) {
             result = await this._ai.RunModel(request.ImageDataUrl, options);
         } else {
@@ -106,7 +106,7 @@ public class CachedCensorImageRequestHandler : IRequestHandler<CensorImageReques
             try {
                 result = await this._ai.RunModel(request.ImageDataUrl!, options);
             } catch {
-                result = await this._ai.RunModel(request.ImageUrl!, options);
+                result = await this._ai.RunModel(System.Web.HttpUtility.UrlDecode(request.ImageUrl!), options);
             }
         }
         return result;

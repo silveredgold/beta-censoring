@@ -32,6 +32,7 @@ public static class ServerConfigurationExtensions {
             defaults.PaddingScale = matchOpts.PaddingScale ?? defaults.PaddingScale;
             defaults.ClassStrength = matchOpts.ClassStrength ?? new Dictionary<string, float>();
             defaults.ForcePixelBackground = matchOpts.ForcePixelBackground ?? false;
+            defaults.LayerModifier = (matchOpts.LayerModifier != null && matchOpts.LayerModifier.Any()) ? matchOpts.LayerModifier : new Dictionary<string, int> {["EYES_F"] = 10, ["MOUTH_F"] = 10};
         }
         return defaults;
     }
