@@ -1,6 +1,6 @@
 {
   "name": "@silveredgold/beta-censor-client",
-  "version": "0.0.0-alpha16",
+  "version": "0.0.0-alpha17",
   "description": "Client library for accessing a running instance of Beta Censoring",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -27,9 +27,8 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^6.0.2",
-    "@silveredgold/beta-shared": "^0.0.1-alpha26",
-    "@silveredgold/ste-events": "^2.1.16-alpha4",
-    "@silveredgold/ste-simple-events": "^2.1.16-alpha4",
+    "@silveredgold/beta-shared": "0.0.1-alpha34",
+    "strongly-typed-events": "^3.0.1",
     "missionlog": "^1.8.3"
   }
 }

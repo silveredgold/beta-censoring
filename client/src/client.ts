@@ -1,12 +1,11 @@
 import { CensorMode, CensorType, IPreferences } from "@silveredgold/beta-shared/preferences";
 import { ActionPayload, AssetType, CancelRequest, ConnectionStatus, ICensorBackend, ImageCensorRequest, ImageCensorResponse, StatisticsData } from "@silveredgold/beta-shared/transport";
-import { EventDispatcher } from "@silveredgold/ste-events";
-import { ISimpleEvent, SimpleEventDispatcher  } from "@silveredgold/ste-simple-events";
 import { HttpTransportType, HubConnectionState } from "@microsoft/signalr";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 import { censorImageRequest, censorImageResponse } from "./types";
 import { log } from "missionlog";
 import { dbg, dbgLog, dbgTime, dbgTimeEnd } from "./util";
+import { EventDispatcher, SimpleEventDispatcher } from "strongly-typed-events";
 
 export class BetaCensorClient implements ICensorBackend {
 
@@ -42,6 +41,13 @@ export class BetaCensorClient implements ICensorBackend {
             }
         });
         this._ready = connection.start();
+        this._fileReader = blob => {
+            return new Promise<string>(callback => {
+                const reader = new FileReader();
+                reader.onload = function () { callback(this.result as string) };
+                reader.readAsDataURL(blob);
+            });
+        };
     }
 
     private getConnection = (host?: string) => {
@@ -83,8 +89,18 @@ export class BetaCensorClient implements ICensorBackend {
         }
     }
 
+    
+    private _fileReader : ((blob: Blob) => Promise<string>);
+    public get fileReader() : ((blob: Blob) => Promise<string>) {
+        return this._fileReader;
+    }
+    public set fileReader(v : ((blob: Blob) => Promise<string>)) {
+        this._fileReader = v;
+    }
+    
+
     ephemeral: boolean = false;
-    async censorImage(request: ImageCensorRequest): Promise<ImageCensorResponse | undefined> {
+    async censorImage(request: ImageCensorRequest): Promise<boolean | ImageCensorResponse | undefined> {
         if (request.srcId) {
             this._srcMap.set(request.id, request.srcId);
             const opts = toBetaCensor(request.preferences);
@@ -98,11 +114,12 @@ export class BetaCensorClient implements ICensorBackend {
                     const type = resp.headers.get('content-type');
                     // dbgLog('getting buffer from bg response', resp.status, type);
                     const blob = await resp.blob();
-                    encoded = await new Promise<string>(callback => {
-                        const reader = new FileReader();
-                        reader.onload = function () { callback(this.result as string) };
-                        reader.readAsDataURL(blob);
-                    });
+                    encoded = await this._fileReader(blob);
+                    // encoded = await new Promise<string>(callback => {
+                    //     const reader = new FileReader();
+                    //     reader.onload = function () { callback(this.result as string) };
+                    //     reader.readAsDataURL(blob);
+                    // });
                 } catch (e) {
                     log.warn('fetch', 'Failed to fetch image, reverting to URL request', e);
                 }
@@ -124,6 +141,7 @@ export class BetaCensorClient implements ICensorBackend {
             dbgTime(`censorRequest:${request.id}`);
             const result: boolean = await this._connection.invoke('CensorImage', payload);
             dbg('signalr: request sent', request.id, result);
+            return result;
         }
         return undefined;
     }
@@ -248,6 +266,7 @@ const toBetaCensor = (prefs: IPreferences): { [key: string]: { CensorType: strin
 const toPayload = (type: CensorMode, prefs: IPreferences, params?: URLSearchParams): {CensorType: CensorType|string, Level: number} => {
     switch (type.method) {
         case CensorType.Sticker:
+            const catParams = new URLSearchParams({categories: prefs.enabledStickers.join(',')});
             return {CensorType: type.method + ":" + prefs.enabledStickers.join(';'), Level: Math.round(type.level)};
         case CensorType.Caption:
             return {CensorType: params ? `${type.method}?${params?.toString()}` : type.method, Level: Math.round(type.level)};
